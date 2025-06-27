@@ -108,7 +108,22 @@ public class Author {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void editAuthor(EditAuthorCommand editAuthorCommand) {
-        //implement business logic here:
+        // 작가 정보 수정 로직
+        if (editAuthorCommand.getEmail() != null && !editAuthorCommand.getEmail().trim().isEmpty()) {
+            if (!this.email.equals(editAuthorCommand.getEmail().trim())) {
+                throw new IllegalArgumentException("기존과 동일한 이메일입니다.");
+            }
+
+            if (repository().findByEmail(editAuthorCommand.getEmail().trim()).isPresent()) {
+                throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+            }
+
+            this.email = editAuthorCommand.getEmail().trim();
+        }
+
+        if (editAuthorCommand.getIntroduction() != null) {
+            this.introduction = editAuthorCommand.getIntroduction().trim();
+        }
 
         AuthorEdited authorEdited = new AuthorEdited(this);
         authorEdited.publishAfterCommit();
