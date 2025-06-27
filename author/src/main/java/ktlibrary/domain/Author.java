@@ -20,16 +20,22 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String name;
 
     private String introduction;
 
-    private Boolean isApproved;
+    @Column(nullable = false)
+    private Boolean isApproved = false;
 
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
     public static AuthorRepository repository() {
