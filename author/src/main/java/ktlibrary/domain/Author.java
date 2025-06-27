@@ -96,11 +96,13 @@ public class Author {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void disapproveAuthor(
-        DisapproveAuthorCommand disapproveAuthorCommand
-    ) {
-        //implement business logic here:
+    public void disapproveAuthor(DisapproveAuthorCommand disapproveAuthorCommand) {
+        // 작가 승인 거부 로직
+        if (!this.isApproved) {
+            throw new IllegalStateException("이미 승인되지 않은 상태입니다.");
+        }
 
+        this.isApproved = false;
     }
 
     //>>> Clean Arch / Port Method
