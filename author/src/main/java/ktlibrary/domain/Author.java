@@ -83,7 +83,12 @@ public class Author {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void approveAuthor(ApproveAuthorCommand approveAuthorCommand) {
-        //implement business logic here:
+        // 작가 승인 로직
+        if (this.isApproved) {
+            throw new IllegalStateException("이미 승인된 작가입니다.");
+        }
+
+        this.isApproved = true;
 
         AuthorApproved authorApproved = new AuthorApproved(this);
         authorApproved.publishAfterCommit();
