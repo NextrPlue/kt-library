@@ -110,7 +110,7 @@ public class Author {
     public void editAuthor(EditAuthorCommand editAuthorCommand) {
         // 작가 정보 수정 로직
         if (editAuthorCommand.getEmail() != null && !editAuthorCommand.getEmail().trim().isEmpty()) {
-            if (!this.email.equals(editAuthorCommand.getEmail().trim())) {
+            if (this.email.equals(editAuthorCommand.getEmail().trim())) {
                 throw new IllegalArgumentException("기존과 동일한 이메일입니다.");
             }
 
