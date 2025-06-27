@@ -58,7 +58,23 @@ public class Author {
 
     //<<< Clean Arch / Port Method
     public void registerAuthor(RegisterAuthorCommand registerAuthorCommand) {
-        //implement business logic here:
+        // 작가 등록 로직
+        if (registerAuthorCommand.getEmail() == null || registerAuthorCommand.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일은 필수입니다.");
+        }
+
+        if (registerAuthorCommand.getName() == null || registerAuthorCommand.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("이름은 필수입니다.");
+        }
+
+        if (repository().findByEmail(registerAuthorCommand.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+        }
+
+        this.email = registerAuthorCommand.getEmail().trim();
+        this.name = registerAuthorCommand.getName().trim();
+        this.introduction = registerAuthorCommand.getIntroduction() != null ? registerAuthorCommand.getIntroduction().trim() : "";
+        this.isApproved = false;
 
         AuthorRegistered authorRegistered = new AuthorRegistered(this);
         authorRegistered.publishAfterCommit();
