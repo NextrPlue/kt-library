@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RegisterManuscriptCommand {
 
-    private AuthorId authorId;
+    private Long authorId;
     private String manuscriptTitle;
     private String manuscriptContent;
     private Long id;

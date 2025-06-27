@@ -8,7 +8,7 @@ import lombok.Data;
 public class EditManuscriptCommand {
 
     private Long id;
-    private String mansuscriptTitle;
-    private String maniscriptContent;
+    private String manuscriptTitle;
+    private String manuscriptContent;
     private Long authorId;
 }

@@ -29,7 +29,7 @@ public class ReadAuthorViewHandler {
             // view 객체에 이벤트의 Value 를 set 함
             readAuthor.setAuthorId(authorRegistered.getId());
             readAuthor.setIsApproved(authorRegistered.getIsApproved());
-            readAuthor.setName(authorRegistered.getName());
+            readAuthor.setAuthorName(authorRegistered.getName());
             readAuthor.setIntroduction(authorRegistered.getIntroduction());
             // view 레파지 토리에 save
             readAuthorRepository.save(readAuthor);
