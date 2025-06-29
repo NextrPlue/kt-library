@@ -53,6 +53,12 @@ public class Customer {
     public void registerUser(RegisterUserCommand registerUserCommand) {
         //implement business logic here:
 
+
+        this.name = registerUserCommand.getName();
+        this.email = registerUserCommand.getEmail();
+        this.isKtUser =  this.isKtUser = registerUserCommand.getIsKtUser(); 
+        //registerUserCommand.get
+        // false; // 기본값 설정 (구독 여부는 아직 판단되지 않음) 
         CustomerRegistered customerRegistered = new CustomerRegistered(this);
         customerRegistered.publishAfterCommit();
     }
