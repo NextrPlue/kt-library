@@ -29,9 +29,18 @@ public class Customer {
     private Date createdAt;
 
     private Date updatedAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+    }
 
-    @Embedded
-    private SubsciptionId subsciptionId;
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    private Subsciption subscription;
+
 
     public static CustomerRepository repository() {
         CustomerRepository customerRepository = CustomerApplication.applicationContext.getBean(
