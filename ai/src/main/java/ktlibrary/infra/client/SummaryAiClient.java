@@ -26,12 +26,6 @@ public class SummaryAiClient {
 
     /**
      * 주어진 텍스트 청크(chunk)를 OpenAI GPT-4o API를 사용하여 요약합니다.
-     *
-     * @param manuscriptTitle   책 제목
-     * @param authorName        작가 이름
-     * @param introduction      작가 소개
-     * @param chunk             책 내용의 일부
-     * @return 요약 결과 (문자열)
      */
     public String summarizeChunk(String manuscriptTitle, String authorName, String introduction, String chunk) {
         String url = "https://api.openai.com/v1/chat/completions";
