@@ -1,4 +1,4 @@
-package ktlibrary.domain;
+package ktlibrary.domain.Command;
 
 import java.time.LocalDate;
 import java.util.*;
