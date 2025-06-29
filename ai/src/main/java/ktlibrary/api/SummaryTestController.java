@@ -27,7 +27,7 @@ public class SummaryTestController {
     private final SummaryService summaryService;
 
     /**
-     * test-summary 엔드포인트는 test_book.txt 파일의 내용을 읽어 요약 결과를 반환합니다.
+     * test-summary 엔드포인트는 test_book2.txt 파일의 내용을 읽어 요약 결과를 반환합니다.
      * @return 요약된 책 내용 문자열
      */
     @GetMapping("/test-summary")
@@ -46,8 +46,16 @@ public class SummaryTestController {
                 content = reader.lines().collect(Collectors.joining("\n"));
             }
 
+            /**
+             * 테스트를 위한 하드 코딩
+             * 이후에 삭제
+             */
+            String manuscriptTitle = "소나기";
+            String authorName = "황순원";
+            String introduction = "대한민국의 시인이자 소설가. 김동리, 김승옥과 함께 한국 현대문학을 대표하는 소설가로 평가받는다.";
+
             // 3. 요약 서비스에 책 내용을 전달하고, 결과 문자열을 반환합니다.
-            return summaryService.summarize(content);
+            return summaryService.summarize(manuscriptTitle, authorName, introduction, content);
 
         } catch (Exception e) {
             // 파일을 읽거나 요약 중 문제가 발생한 경우, 에러 메시지를 반환합니다.
