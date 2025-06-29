@@ -20,17 +20,34 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String name;
 
     private String introduction;
 
-    private Boolean isApproved;
+    @Column(nullable = false)
+    private Boolean isApproved = false;
 
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = new Date();
+    }
 
     public static AuthorRepository repository() {
         AuthorRepository authorRepository = AuthorApplication.applicationContext.getBean(
@@ -41,7 +58,23 @@ public class Author {
 
     //<<< Clean Arch / Port Method
     public void registerAuthor(RegisterAuthorCommand registerAuthorCommand) {
-        //implement business logic here:
+        // 작가 등록 로직
+        if (registerAuthorCommand.getEmail() == null || registerAuthorCommand.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일은 필수입니다.");
+        }
+
+        if (registerAuthorCommand.getName() == null || registerAuthorCommand.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException("이름은 필수입니다.");
+        }
+
+        if (repository().findByEmail(registerAuthorCommand.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+        }
+
+        this.email = registerAuthorCommand.getEmail().trim();
+        this.name = registerAuthorCommand.getName().trim();
+        this.introduction = registerAuthorCommand.getIntroduction() != null ? registerAuthorCommand.getIntroduction().trim() : "";
+        this.isApproved = false;
 
         AuthorRegistered authorRegistered = new AuthorRegistered(this);
         authorRegistered.publishAfterCommit();
@@ -50,7 +83,12 @@ public class Author {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void approveAuthor(ApproveAuthorCommand approveAuthorCommand) {
-        //implement business logic here:
+        // 작가 승인 로직
+        if (this.isApproved) {
+            throw new IllegalStateException("이미 승인된 작가입니다.");
+        }
+
+        this.isApproved = true;
 
         AuthorApproved authorApproved = new AuthorApproved(this);
         authorApproved.publishAfterCommit();
@@ -58,17 +96,34 @@ public class Author {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void disapproveAuthor(
-        DisapproveAuthorCommand disapproveAuthorCommand
-    ) {
-        //implement business logic here:
+    public void disapproveAuthor(DisapproveAuthorCommand disapproveAuthorCommand) {
+        // 작가 승인 거부 로직
+        if (!this.isApproved) {
+            throw new IllegalStateException("이미 승인되지 않은 상태입니다.");
+        }
 
+        this.isApproved = false;
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void editAuthor(EditAuthorCommand editAuthorCommand) {
-        //implement business logic here:
+        // 작가 정보 수정 로직
+        if (editAuthorCommand.getEmail() != null && !editAuthorCommand.getEmail().trim().isEmpty()) {
+            if (this.email.equals(editAuthorCommand.getEmail().trim())) {
+                throw new IllegalArgumentException("기존과 동일한 이메일입니다.");
+            }
+
+            if (repository().findByEmail(editAuthorCommand.getEmail().trim()).isPresent()) {
+                throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+            }
+
+            this.email = editAuthorCommand.getEmail().trim();
+        }
+
+        if (editAuthorCommand.getIntroduction() != null) {
+            this.introduction = editAuthorCommand.getIntroduction().trim();
+        }
 
         AuthorEdited authorEdited = new AuthorEdited(this);
         authorEdited.publishAfterCommit();
