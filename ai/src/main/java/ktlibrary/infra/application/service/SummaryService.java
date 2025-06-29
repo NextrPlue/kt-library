@@ -25,28 +25,26 @@ public class SummaryService {
      * 주어진 긴 텍스트(책 내용)를 적절한 길이로 나눈 후,
      * 각 청크(chunk)를 요약하고 결과를 결합하여 하나의 요약문으로 반환합니다.
      * 반환된 요약을 다시 한번 요약을 수행하여 최종 요약본을 만듭니다.
-     *
-     * @param content 전체 텍스트(책 내용)
-     * @return 종합된 요약 결과 문자열
      */
-    public String summarize(String content) {
+    public String summarize(String manuscriptTitle, String manuscriptContent, String authorName, String introduction) {
         // 줄 단위로 청크를 나누고, 각 청크를 요약한 후 결과를 모아 반환
-        List<String> chunks = splitByLineChunks(content, 1000, 200);
+        List<String> chunks = splitByLineChunks(manuscriptContent, 1000, 200);
 
+        // 각 청크를 요약한 내용을 저장할 리스트
         List<String> partialSummaries = new ArrayList<>();
 
+        // partial 요약
         for (String chunk : chunks) {
             String partial = summaryAiClient.summarizeChunk(
-                "소나기", // 책 제목
-                "황순원", // 작가 이름
-                "대한민국의 시인이자 소설가. 김동리, 김승옥과 함께 한국 현대문학을 대표하는 소설가로 평가받는다.", // 작가 소개
-                chunk
+                manuscriptTitle, authorName, introduction, chunk
             );
             partialSummaries.add(partial);
         }
 
         // 계층적 요약: partial 요약을 최종 요약으로 다시 한번 압축
         String joinedSummaries = String.join("\n", partialSummaries);
+
+        // 최종 요약본 반환
         return summaryAiClient.summarizeFinal(joinedSummaries);
     }
 
