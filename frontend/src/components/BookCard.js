@@ -1,5 +1,5 @@
 import React from 'react';
-import './BookCard.css';
+import styles from './BookCard.module.css';
 
 const BookCard = ({ book, onClick }) => {
   const {
@@ -28,20 +28,20 @@ const BookCard = ({ book, onClick }) => {
   };
 
   return (
-    <div className="book-card" onClick={() => onClick && onClick(book)}>
+    <div className={styles.bookCard} onClick={() => onClick && onClick(book)}>
       {/* 표지 이미지 */}
-      <div className="book-cover">
+      <div className={styles.bookCover}>
         {coverUrl ? (
-          <img src={coverUrl} alt={title} className="cover-image" />
+          <img src={coverUrl} alt={title} className={styles.coverImage} />
         ) : (
-          <div className="cover-placeholder">
+          <div className={styles.coverPlaceholder}>
             <span className="material-icons">menu_book</span>
           </div>
         )}
         
         {/* 베스트셀러 뱃지 */}
         {isBestSeller && (
-          <div className="bestseller-badge">
+          <div className={styles.bestsellerBadge}>
             <span className="material-icons">star</span>
             <span>베스트</span>
           </div>
@@ -49,35 +49,35 @@ const BookCard = ({ book, onClick }) => {
         
         {/* 카테고리 태그 */}
         {category && (
-          <div className="category-tag">
+          <div className={styles.categoryTag}>
             {category}
           </div>
         )}
       </div>
 
       {/* 도서 정보 */}
-      <div className="book-info">
-        <h3 className="book-title">{title}</h3>
-        <p className="book-author">
+      <div className={styles.bookInfo}>
+        <h3 className={styles.bookTitle}>{title}</h3>
+        <p className={styles.bookAuthor}>
           <span className="material-icons">person</span>
           {authorName}
         </p>
         
         {summary && (
-          <p className="book-summary">
+          <p className={styles.bookSummary}>
             {summary.length > 80 ? `${summary.substring(0, 80)}...` : summary}
           </p>
         )}
         
-        <div className="book-meta">
-          <div className="book-stats">
-            <span className="view-count">
+        <div className={styles.bookMeta}>
+          <div className={styles.bookStats}>
+            <span className={styles.viewCount}>
               <span className="material-icons">visibility</span>
               {formatViewCount(viewCount)}
             </span>
           </div>
           
-          <div className="book-price">
+          <div className={styles.bookPrice}>
             {formatPrice(price)}
           </div>
         </div>

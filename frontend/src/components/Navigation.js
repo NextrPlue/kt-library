@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './Navigation.css';
+import styles from './Navigation.module.css';
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -120,23 +120,23 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="navigation">
-      <div className="navigation-container">
-        <div className="navigation-content">
-          <div className="navigation-left">
-            <div className="navigation-logo" onClick={() => navigate('/')}>
-              <div className="logo-icon">
+    <nav className={styles.navigation}>
+      <div className={styles.navigationContainer}>
+        <div className={styles.navigationContent}>
+          <div className={styles.navigationLeft}>
+            <div className={styles.navigationLogo} onClick={() => navigate('/')}>
+              <div className={styles.logoIcon}>
                 <span className="material-icons">menu_book</span>
               </div>
-              <span className="logo-text">KT Library</span>
+              <span className={styles.logoText}>KT Library</span>
             </div>
             
             {user && (
-              <div className="navigation-buttons">
+              <div className={styles.navigationButtons}>
                 {getMenusByRole().map((menu) => (
                   <button
                     key={menu.path}
-                    className={`nav-button ${activeMenu === menu.path ? 'active' : ''}`}
+                    className={`${styles.navButton} ${activeMenu === menu.path ? styles.active : ''}`}
                     onClick={() => navigate(menu.path)}
                   >
                     <span className="material-icons">{menu.icon}</span>
@@ -147,32 +147,32 @@ const Navigation = () => {
             )}
           </div>
 
-          <div className="navigation-right">
+          <div className={styles.navigationRight}>
             {user ? (
               <>
-                <div className="user-info">
-                  <div className="user-details">
-                    <div className="user-name">{user.name}</div>
-                    <div className={`user-role ${user.role}`}>
+                <div className={styles.userInfo}>
+                  <div className={styles.userDetails}>
+                    <div className={styles.userName}>{user.name}</div>
+                    <div className={`${styles.userRole} ${styles[user.role]}`}>
                       {getRoleDisplayName(user.role)}
                     </div>
                   </div>
                 </div>
-                <button className="logout-button" onClick={handleLogout}>
+                <button className={styles.logoutButton} onClick={handleLogout}>
                   <span className="material-icons">logout</span>
                   <span>로그아웃</span>
                 </button>
               </>
             ) : (
-              <div className="guest-buttons">
+              <div className={styles.guestButtons}>
                 <button 
-                  className="login-button"
+                  className={styles.loginButton}
                   onClick={() => navigate('/login')}
                 >
                   로그인
                 </button>
                 <button 
-                  className="signup-button"
+                  className={styles.signupButton}
                   onClick={() => navigate('/register')}
                 >
                   회원가입
