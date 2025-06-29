@@ -9,11 +9,12 @@ import lombok.*;
 //<<< DDD / Domain Event
 @Data
 @ToString
+@Getter
 public class BookRequested extends AbstractEvent {
 
     private Long id;
     private Long pointId;
-    private SubsciptionId subsciptionId;
+    private Subsciption subsciptionId;
 
     public BookRequested(Customer aggregate) {
         super(aggregate);
@@ -22,5 +23,9 @@ public class BookRequested extends AbstractEvent {
     public BookRequested() {
         super();
     }
+    public Long getSubscriptionId() {
+    return subsciptionId != null ? subsciptionId.getId() : null;
+}
+
 }
 //>>> DDD / Domain Event
