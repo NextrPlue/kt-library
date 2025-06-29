@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import BookCard from './components/BookCard';
+import Login from './components/Login';
+import Register from './components/Register';
 import './App.css';
 
 // 테스트용 도서 데이터
@@ -111,19 +113,7 @@ const HomePage = () => {
   );
 };
 
-const LoginPage = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>로그인</h1>
-    <p>로그인 페이지입니다.</p>
-  </div>
-);
 
-const RegisterPage = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>회원가입</h1>
-    <p>회원가입 페이지입니다.</p>
-  </div>
-);
 
 // 작가 페이지들
 const AuthorManuscripts = () => (
@@ -212,8 +202,8 @@ function App() {
         <Navigation />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           
           {/* 작가 라우트 */}
           <Route path="/author/manuscripts" element={<AuthorManuscripts />} />
