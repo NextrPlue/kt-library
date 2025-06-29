@@ -1,63 +1,115 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
+import BookCard from './components/BookCard';
 import './App.css';
 
+// 테스트용 도서 데이터
+const sampleBooks = [
+  {
+    id: 1,
+    title: "클린 코드: 애자일 소프트웨어 장인 정신",
+    authorName: "로버트 C. 마틴",
+    category: "프로그래밍",
+    summary: "더 나은 코드를 작성하는 방법에 대한 실용적인 조언들을 담은 개발자 필독서입니다. 좋은 코드와 나쁜 코드를 구분하는 방법을 배우고, 좋은 코드를 작성하는 실무 기법을 익힐 수 있습니다.",
+    coverUrl: null,
+    price: 1500,
+    viewCount: 6,
+    isBestSeller: true,
+    fileUrl: "/books/clean-code.pdf"
+  },
+  {
+    id: 2,
+    title: "자바스크립트 완벽 가이드",
+    authorName: "데이비드 플래나간",
+    category: "웹개발",
+    summary: "자바스크립트의 모든 것을 다룬 완벽한 레퍼런스 가이드입니다. 기초부터 고급 주제까지 체계적으로 학습할 수 있습니다.",
+    coverUrl: null,
+    price: 1000,
+    viewCount: 3,
+    isBestSeller: false,
+    fileUrl: "/books/javascript-guide.pdf"
+  }
+];
+
 // 임시 페이지 컴포넌트들
-const HomePage = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>KT Library 홈페이지</h1>
-    <p>도서 출판 및 구독 플랫폼에 오신 것을 환영합니다!</p>
-    
-    {/* 테스트용 로그인 버튼들 */}
-    <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem' }}>
-      <button 
-        onClick={() => {
-          localStorage.setItem('user', JSON.stringify({
-            id: 1,
-            name: '김작가',
-            email: 'author@example.com',
-            role: 'author'
-          }));
-          window.location.reload();
-        }}
-        style={{ padding: '0.5rem 1rem', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-      >
-        작가로 로그인
-      </button>
+const HomePage = () => {
+  const handleBookClick = (book) => {
+    console.log('책 클릭:', book);
+    alert(`"${book.title}" 책을 선택했습니다!`);
+  };
+
+  return (
+    <div style={{ padding: '2rem' }}>
+      <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <h1>KT Library 홈페이지</h1>
+        <p>도서 출판 및 구독 플랫폼에 오신 것을 환영합니다!</p>
+        
+        {/* 테스트용 로그인 버튼들 */}
+        <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <button 
+            onClick={() => {
+              localStorage.setItem('user', JSON.stringify({
+                id: 1,
+                name: '김작가',
+                email: 'author@example.com',
+                role: 'author'
+              }));
+              window.location.reload();
+            }}
+            style={{ padding: '0.5rem 1rem', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '0.25rem' }}
+          >
+            작가로 로그인
+          </button>
+          
+          <button 
+            onClick={() => {
+              localStorage.setItem('user', JSON.stringify({
+                id: 2,
+                name: '이고객',
+                email: 'customer@example.com',
+                role: 'customer'
+              }));
+              window.location.reload();
+            }}
+            style={{ padding: '0.5rem 1rem', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '0.25rem' }}
+          >
+            고객으로 로그인
+          </button>
+          
+          <button 
+            onClick={() => {
+              localStorage.setItem('user', JSON.stringify({
+                id: 3,
+                name: '박관리자',
+                email: 'admin@example.com',
+                role: 'admin'
+              }));
+              window.location.reload();
+            }}
+            style={{ padding: '0.5rem 1rem', backgroundColor: '#dc2626', color: 'white', border: 'none', borderRadius: '0.25rem' }}
+          >
+            관리자로 로그인
+          </button>
+        </div>
+      </div>
       
-      <button 
-        onClick={() => {
-          localStorage.setItem('user', JSON.stringify({
-            id: 2,
-            name: '이고객',
-            email: 'customer@example.com',
-            role: 'customer'
-          }));
-          window.location.reload();
-        }}
-        style={{ padding: '0.5rem 1rem', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-      >
-        고객으로 로그인
-      </button>
-      
-      <button 
-        onClick={() => {
-          localStorage.setItem('user', JSON.stringify({
-            id: 3,
-            name: '박관리자',
-            email: 'admin@example.com',
-            role: 'admin'
-          }));
-          window.location.reload();
-        }}
-        style={{ padding: '0.5rem 1rem', backgroundColor: '#dc2626', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-      >
-        관리자로 로그인
-      </button>
+      {/* 도서 카드 테스트 섹션 */}
+      <div style={{ marginTop: '3rem' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#1f2937' }}>인기 도서</h2>
+        <div className="books-grid">
+          {sampleBooks.map(book => (
+            <BookCard 
+              key={book.id} 
+              book={book} 
+              onClick={handleBookClick}
+            />
+          ))}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const LoginPage = () => (
   <div style={{ padding: '2rem' }}>
