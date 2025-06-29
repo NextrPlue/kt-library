@@ -1,4 +1,4 @@
-package ktlibrary.domain;
+package ktlibrary.domain.Command;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -13,4 +13,6 @@ public class GenerateSummaryCommand {
     private Long authorId;              // 작가 ID
     private String authorName;          // 작가 이름
     private String introduction;        // 작가 소개
+
+    private String summary;             // 요약 내용 (AI 결과 저장용)
 }
