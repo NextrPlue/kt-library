@@ -32,8 +32,9 @@ public class Subsciption {
 
     private Date updatedAt;
 
-    @Embedded
-    private CustomerId customerId;
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     public static SubsciptionRepository repository() {
         SubsciptionRepository subsciptionRepository = CustomerApplication.applicationContext.getBean(
@@ -42,58 +43,79 @@ public class Subsciption {
         return subsciptionRepository;
     }
 
-    //<<< Clean Arch / Port Method
-    public void cancelSubscription(
-        CancelSubscriptionCommand cancelSubscriptionCommand
-    ) {
-        //implement business logic here:
+    public void cancelSubscription(CancelSubscriptionCommand command) {
+    this.isValid = false;
+    this.updatedAt = new Date();
 
-    }
+    InvalidSubscription event = new InvalidSubscription(this);
+    event.publishAfterCommit();
+}
+
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void subscribe(SubscribeCommand subscribeCommand) {
-        //implement business logic here:
+    this.isValid = true;
+    this.startDate = LocalDate.now().toString();
+    this.endDate = LocalDate.now().plusMonths(1).toString();
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
 
-    }
+    // 이벤트 발행
+    ValidSubscription event = new ValidSubscription(this);
+    event.publishAfterCommit();
+}
+
+public static void isSubscribed(BookRequested bookRequested) {
+    repository().findById(bookRequested.getSubscriptionId()).ifPresent(subsciption -> {
+        if (subsciption.getIsValid()) {
+            ValidSubscription event = new ValidSubscription(subsciption);
+            event.publishAfterCommit();
+        } else {
+            InvalidSubscription event = new InvalidSubscription(subsciption);
+            event.publishAfterCommit();
+        }
+    });
+}
 
     //>>> Clean Arch / Port Method
 
     //<<< Clean Arch / Port Method
-    public static void isSubscribed(BookRequested bookRequested) {
-        //implement business logic here:
+    
+    // public static void isSubscribed(BookRequested bookRequested) {
+    //     //implement business logic here:
 
-        /** Example 1:  new item 
-        Subsciption subsciption = new Subsciption();
-        repository().save(subsciption);
+    //     /** Example 1:  new item 
+    //     Subsciption subsciption = new Subsciption();
+    //     repository().save(subsciption);
 
-        ValidSubscription validSubscription = new ValidSubscription(subsciption);
-        validSubscription.publishAfterCommit();
-        InvalidSubscription invalidSubscription = new InvalidSubscription(subsciption);
-        invalidSubscription.publishAfterCommit();
-        */
+    //     ValidSubscription validSubscription = new ValidSubscription(subsciption);
+    //     validSubscription.publishAfterCommit();
+    //     InvalidSubscription invalidSubscription = new InvalidSubscription(subsciption);
+    //     invalidSubscription.publishAfterCommit();
+    //     */
 
-        /** Example 2:  finding and process
+    //     /** Example 2:  finding and process
         
-        // if bookRequested.subsciptionId exists, use it
+    //     // if bookRequested.subsciptionId exists, use it
         
-        // ObjectMapper mapper = new ObjectMapper();
-        // Map<Long, Object> customerMap = mapper.convertValue(bookRequested.getSubsciptionId(), Map.class);
+    //     // ObjectMapper mapper = new ObjectMapper();
+    //     // Map<Long, Object> customerMap = mapper.convertValue(bookRequested.getSubsciptionId(), Map.class);
 
-        repository().findById(bookRequested.get???()).ifPresent(subsciption->{
+    //     repository().findById(bookRequested.get???()).ifPresent(subsciption->{
             
-            subsciption // do something
-            repository().save(subsciption);
+    //         subsciption // do something
+    //         repository().save(subsciption);
 
-            ValidSubscription validSubscription = new ValidSubscription(subsciption);
-            validSubscription.publishAfterCommit();
-            InvalidSubscription invalidSubscription = new InvalidSubscription(subsciption);
-            invalidSubscription.publishAfterCommit();
+    //         ValidSubscription validSubscription = new ValidSubscription(subsciption);
+    //         validSubscription.publishAfterCommit();
+    //         InvalidSubscription invalidSubscription = new InvalidSubscription(subsciption);
+    //         invalidSubscription.publishAfterCommit();
 
-         });
-        */
+    //      });
+    //     */
 
-    }
+    // }
     //>>> Clean Arch / Port Method
 
 }
