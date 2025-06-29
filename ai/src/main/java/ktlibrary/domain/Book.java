@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
 import ktlibrary.AiApplication;
+import ktlibrary.domain.Command.*;
+import ktlibrary.domain.Repository.*;
 import lombok.Data;
 
 @Entity
@@ -52,7 +54,7 @@ public class Book {
     }
 
     //<<< Clean Arch / Port Method
-    public void requestCover(RequestCoverCommand requestCoverCommand) {
+    public void requestCover(GenerateCoverCommand generateCoverCommand) {
         //implement business logic here:
 
     }
