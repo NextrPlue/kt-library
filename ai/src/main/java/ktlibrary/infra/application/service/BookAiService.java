@@ -2,11 +2,15 @@ package ktlibrary.infra.application.service;
 
 import ktlibrary.domain.Book;
 import ktlibrary.domain.Command.GenerateCoverCommand;
+import ktlibrary.domain.Command.GenerateEbookCommand;
 import ktlibrary.domain.Command.GenerateSummaryCommand;
 import ktlibrary.domain.Command.GenerateCategoryCommand;
 import ktlibrary.domain.Command.RegistBookCommand;
 import ktlibrary.domain.Repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +20,8 @@ public class BookAiService {
     private final SummaryService summaryService;
     private final CoverService coverService;
     private final CategoryService categoryService;
+    private final EbookService ebookService;
+    private final FileStorageService fileStorageService;
 
     private final BookRepository bookRepository;
 
@@ -44,7 +50,16 @@ public class BookAiService {
         return categoryService.generateCategory(summary);
     }
 
-    // 4. 최종 도서 등록
+    // 4. 전자책 생성
+    public byte[] generateEbook(GenerateEbookCommand command) {
+        return ebookService.generateEbook(
+            command.getManuscriptTitle(),
+            command.getAuthorName(),
+            command.getManuscriptContent()
+        );
+    }
+
+    // 5. 최종 도서 등록
     public Book registerBook(RegistBookCommand command) {
         Book book = new Book();
 
@@ -94,7 +109,18 @@ public class BookAiService {
         String category = generateCategory(categoryCommand);
         categoryCommand.setCategory(category);
 
-        // 4. 도서 등록
+        // 4. 전자책 생성
+        GenerateEbookCommand ebookCommand = new GenerateEbookCommand();
+        byte[] ebookFile = generateEbook(ebookCommand);
+
+        String bookUrl;
+        try {
+            bookUrl = fileStorageService.savePdf(ebookCommand.getId(), ebookFile);
+        } catch (IOException e) {
+            throw new RuntimeException("PDF 저장 중 오류가 발생했습니다.", e);
+        }
+
+        // 5. 도서 등록
         RegistBookCommand registCommand = new RegistBookCommand();
         registCommand.setId(command.getId());
         registCommand.setManuscriptTitle(command.getManuscriptTitle());
@@ -103,9 +129,10 @@ public class BookAiService {
         registCommand.setAuthorName(command.getAuthorName());
         registCommand.setIntroduction(command.getIntroduction());
 
-        registCommand.setSummary(summary);
-        registCommand.setCoverUrl(coverUrl);
-        registCommand.setCategory(category);
+        registCommand.setSummary(summary);      // 요약
+        registCommand.setCoverUrl(coverUrl);    // 커버 url
+        registCommand.setCategory(category);    // 카테고리
+        registCommand.setBookUrl(bookUrl);      // 전자책 url
 
         // 도서 저장
         return registerBook(registCommand);
