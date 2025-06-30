@@ -31,10 +31,15 @@ public class PointController {
         @RequestBody RequestPointCommand requestPointCommand
     ) throws Exception {
         System.out.println("##### /point/requestPoint  called #####");
-        Point point = new Point();
-        point.requestPoint(requestPointCommand);
+
+        // 기존 포인트를 DB에서 조회
+        Point point = pointRepository.findByCustomerId(requestPointCommand.getCustomerId())
+            .orElseThrow(() -> new IllegalStateException("포인트 정보가 없습니다."));
+
+        // Long 값만 넘김
+        point.requestPoint(requestPointCommand.getPoint());
+
         pointRepository.save(point);
         return point;
     }
 }
-//>>> Clean Arch / Inbound Adaptor

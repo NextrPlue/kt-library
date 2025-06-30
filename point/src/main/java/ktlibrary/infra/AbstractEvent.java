@@ -18,6 +18,12 @@ public class AbstractEvent {
     String eventType;
     Long timestamp;
 
+    private static KafkaProcessor kafkaProcessor;
+
+    public static void setKafkaProcessor(KafkaProcessor processor) {
+        kafkaProcessor = processor;
+    }
+
     public AbstractEvent(Object aggregate) {
         this();
         BeanUtils.copyProperties(aggregate, this);
@@ -29,21 +35,12 @@ public class AbstractEvent {
     }
 
     public void publish() {
-        /**
-         * spring streams 방식
-         */
-        KafkaProcessor processor = PointApplication.applicationContext.getBean(
-            KafkaProcessor.class
-        );
-        MessageChannel outputChannel = processor.outboundTopic();
+        MessageChannel outputChannel = kafkaProcessor.outboundTopic();
 
         outputChannel.send(
             MessageBuilder
                 .withPayload(this)
-                .setHeader(
-                    MessageHeaders.CONTENT_TYPE,
-                    MimeTypeUtils.APPLICATION_JSON
-                )
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
                 .setHeader("type", getEventType())
                 .build()
         );
