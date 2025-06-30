@@ -61,9 +61,53 @@ public class BookAiService {
 
         return bookRepository.save(book);
     }
-//
-//    // 전체 파이프라인 실행
-//    public void processBookAiPipeline(GenerateSummaryCommand command) {
-//
-//    }
+
+    // 전체 파이프라인 실행
+    public Book processBookAiPipeline(GenerateSummaryCommand command) {
+        // 1. 요약 생성
+        String summary = generateSummary(command);
+        command.setSummary(summary);
+
+        // 2. 커버 이미지 생성
+        GenerateCoverCommand coverCommand = new GenerateCoverCommand();
+        coverCommand.setId(command.getId());
+        coverCommand.setManuscriptTitle(command.getManuscriptTitle());
+        coverCommand.setManuscriptContent(command.getManuscriptContent());
+        coverCommand.setAuthorId(command.getAuthorId());
+        coverCommand.setAuthorName(command.getAuthorName());
+        coverCommand.setIntroduction(command.getIntroduction());
+        coverCommand.setSummary(summary);
+
+        String coverUrl = generateCoverImage(coverCommand);
+        coverCommand.setCoverUrl(coverUrl);
+
+        // 3. 카테고리 생성
+        GenerateCategoryCommand categoryCommand = new GenerateCategoryCommand();
+        categoryCommand.setId(command.getId());
+        categoryCommand.setManuscriptTitle(command.getManuscriptTitle());
+        categoryCommand.setManuscriptContent(command.getManuscriptContent());
+        categoryCommand.setAuthorId(command.getAuthorId());
+        categoryCommand.setAuthorName(command.getAuthorName());
+        categoryCommand.setIntroduction(command.getIntroduction());
+        categoryCommand.setSummary(summary);
+
+        String category = generateCategory(categoryCommand);
+        categoryCommand.setCategory(category);
+
+        // 4. 도서 등록
+        RegistBookCommand registCommand = new RegistBookCommand();
+        registCommand.setId(command.getId());
+        registCommand.setManuscriptTitle(command.getManuscriptTitle());
+        registCommand.setManuscriptContent(command.getManuscriptContent());
+        registCommand.setAuthorId(command.getAuthorId());
+        registCommand.setAuthorName(command.getAuthorName());
+        registCommand.setIntroduction(command.getIntroduction());
+
+        registCommand.setSummary(summary);
+        registCommand.setCoverUrl(coverUrl);
+        registCommand.setCategory(category);
+
+        // 도서 저장
+        return registerBook(registCommand);
+    }
 }
