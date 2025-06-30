@@ -28,7 +28,10 @@ public class BookRequested extends AbstractEvent {
     }
     public Long getSubscriptionId() {
     return subsciptionId != null ? subsciptionId.getId() : null;
-}
+}   
+    public Long getCustomerId(){
+        return id;
+    }
 
 }
 //>>> DDD / Domain Event
