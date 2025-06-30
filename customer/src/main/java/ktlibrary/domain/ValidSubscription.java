@@ -12,13 +12,14 @@ import lombok.*;
 public class ValidSubscription extends AbstractEvent {
 
     private Long id;
-    private Boolean isValid;
-    private Long customerId; //-->> 이거 Customer에서 Long으로 바꿈???
+    private Long customerId; //
+    private Long bookId;
+    private Long bookshelfId;
+    private String title;
 
     public ValidSubscription(Subsciption aggregate) {
         super(aggregate);
         this.id = aggregate.getId();
-        this.isValid = aggregate.getIsValid();
         this.customerId = aggregate.getCustomerId();
     }
 
