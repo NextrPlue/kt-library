@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authorAPI } from '../services/api';
 import styles from './Login.module.css';
 
 const Login = () => {
@@ -61,72 +62,47 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // TODO: 실제 API 호출로 교체
-      // const response = await fetch('/api/auth/login', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(formData),
-      // });
-
-      // 임시 로그인 로직 (데모용)
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 로딩 시뮬레이션
-
-      let userData;
+      // Author API를 통한 로그인 요청
+      const loginResponse = await authorAPI.login({
+        email: formData.email,
+        password: formData.password
+      });
       
-      // 역할별 임시 계정 정보
-      const demoAccounts = {
-        author: {
-          email: 'author@kt.com',
-          password: 'password',
-          data: {
-            id: 1,
-            name: '김작가',
-            email: 'author@kt.com',
-            role: 'author',
-            isApproved: true,
-            introduction: '소설과 에세이를 주로 집필하는 작가입니다.'
-          }
-        },
-        customer: {
-          email: 'customer@kt.com',
-          password: 'password',
-          data: {
-            id: 2,
-            name: '이고객',
-            email: 'customer@kt.com',
-            role: 'customer',
-            subscription: {
-              isValid: true,
-              plan: 'premium'
-            },
-            points: 1500
-          }
-        }
+      console.log('로그인 성공:', loginResponse);
+      
+      // 사용자 데이터 구성
+      const userData = {
+        id: loginResponse.id,
+        name: loginResponse.name,
+        email: loginResponse.email,
+        role: loginResponse.isAdmin ? 'admin' : 'author',
+        introduction: loginResponse.introduction,
+        isApproved: loginResponse.isApproved,
+        isAdmin: loginResponse.isAdmin,
+        createdAt: loginResponse.createdAt,
+        updatedAt: loginResponse.updatedAt
       };
 
-      const selectedAccount = demoAccounts[formData.role];
+      // 선택한 역할과 실제 권한 확인
+      if (formData.role === 'customer' && userData.role !== 'customer') {
+        throw new Error('고객 계정이 아닙니다. 작가 계정으로 로그인해주세요.');
+      }
       
-      if (selectedAccount && 
-          formData.email === selectedAccount.email && 
-          formData.password === selectedAccount.password) {
-        userData = selectedAccount.data;
-      } else {
-        throw new Error(`${getRoleDisplayName(formData.role)} 계정 정보가 일치하지 않습니다.`);
+      if (formData.role === 'author' && userData.role === 'admin') {
+        throw new Error('관리자 계정입니다. 관리자 로그인을 이용해주세요.');
       }
 
       // 로컬 스토리지에 사용자 정보 저장
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', 'demo_token_' + Date.now());
+      localStorage.setItem('token', loginResponse.token);
 
       // 역할에 따른 리다이렉트
       switch (userData.role) {
         case 'author':
           navigate('/author/manuscripts');
           break;
-        case 'customer':
-          navigate('/customer/books');
+        case 'admin':
+          navigate('/admin/authors');
           break;
         default:
           navigate('/');
@@ -136,8 +112,24 @@ const Login = () => {
       window.location.reload();
       
     } catch (error) {
+      console.error('로그인 실패:', error);
+      
+      let errorMessage = '로그인 중 오류가 발생했습니다.';
+      
+      if (error.message.includes('등록되지 않은 이메일')) {
+        errorMessage = '등록되지 않은 이메일입니다.';
+      } else if (error.message.includes('비밀번호가 일치하지 않습니다')) {
+        errorMessage = '비밀번호가 일치하지 않습니다.';
+      } else if (error.message.includes('승인 대기 중인 계정')) {
+        errorMessage = '승인 대기 중인 계정입니다. 관리자 승인을 기다려주세요.';
+      } else if (error.message.includes('서버에 연결할 수 없습니다')) {
+        errorMessage = 'Author 서비스에 연결할 수 없습니다.\n서버가 실행 중인지 확인해주세요.\n\n🔧 로컬 환경: http://localhost:8083\n🐳 Docker 환경: author 컨테이너 확인';
+      } else if (error.message.includes('고객 계정이 아닙니다') || error.message.includes('관리자 계정입니다')) {
+        errorMessage = error.message;
+      }
+      
       setErrors({
-        submit: error.message || '로그인 중 오류가 발생했습니다.'
+        submit: errorMessage
       });
     } finally {
       setIsLoading(false);
@@ -276,7 +268,7 @@ const Login = () => {
           <p className={styles.demoTitle}>데모 계정:</p>
           <div className={styles.demoAccounts}>
             <div className={styles.demoAccount}>
-              <strong>👤 고객:</strong> customer@kt.com / password
+              <strong>👤 고객:</strong> 현재 고객 계정 준비 중
             </div>
             <div className={styles.demoAccount}>
               <strong>✏️ 작가:</strong> author@kt.com / password

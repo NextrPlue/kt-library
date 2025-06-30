@@ -140,9 +140,10 @@ const Register = () => {
         const authorResponse = await authorAPI.registerAuthor({
           email: formData.email,
           name: formData.name,
-          introduction: formData.introduction
+          introduction: formData.introduction,
+          password: formData.password  // 비밀번호 추가
         });
-        
+
         console.log('작가 등록 성공:', authorResponse);
         
         // Author 서비스에서 받은 데이터로 사용자 정보 구성

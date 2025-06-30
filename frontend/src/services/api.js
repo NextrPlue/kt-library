@@ -66,11 +66,33 @@ const apiRequest = async (url, options = {}) => {
  */
 export const authorAPI = {
   /**
+   * 작가/관리자 로그인
+   * @param {object} loginData - 로그인 데이터
+   * @param {string} loginData.email - 이메일
+   * @param {string} loginData.password - 비밀번호
+   * @returns {Promise} 로그인 결과
+   */
+  login: async (loginData) => {
+    const url = `${API_CONFIG.gateway}/authors/login`;
+    
+    const payload = {
+      email: loginData.email,
+      password: loginData.password
+    };
+
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
    * 작가 등록
    * @param {object} authorData - 작가 등록 데이터
    * @param {string} authorData.email - 이메일
    * @param {string} authorData.name - 이름
    * @param {string} authorData.introduction - 소개글
+   * @param {string} authorData.password - 비밀번호
    * @returns {Promise} 등록된 작가 정보
    */
   registerAuthor: async (authorData) => {
@@ -79,7 +101,8 @@ export const authorAPI = {
     const payload = {
       email: authorData.email,
       name: authorData.name,
-      introduction: authorData.introduction || ''
+      introduction: authorData.introduction || '',
+      password: authorData.password
     };
 
     return await apiRequest(url, {
