@@ -23,11 +23,16 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
   cloud:
     stream:
       kafka:
@@ -82,11 +87,16 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create-drop
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
   cloud:
     stream:
       kafka:
