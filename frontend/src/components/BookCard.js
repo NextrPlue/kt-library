@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './BookCard.module.css';
+import styles from '../styles/BookCard.module.css';
 
 const BookCard = ({ book, onClick }) => {
   const {

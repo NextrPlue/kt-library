@@ -12,17 +12,13 @@ import lombok.*;
 public class BookRead extends AbstractEvent {
 
     private Long id;
+    private Long customerId;
+    private Long bookId;
     private String title;
-    private String category;
-    private Long viewCount;
     private Boolean isBestSeller;
-    private String summary;
-    private String coverUrl;
-    private String fileUrl;
-    private Long authorId;
+    private Long viewCount;
     private Long price;
-    private String authorName;
-    private String introduction;
+    private String accessType;
 
     public BookRead(BookShelf aggregate) {
         super(aggregate);

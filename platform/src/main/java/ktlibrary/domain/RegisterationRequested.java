@@ -10,6 +10,9 @@ import lombok.*;
 public class RegisterationRequested extends AbstractEvent {
 
     private Long id;
+    private Long bookId;
+    private String title;
+    private String fileUrl;
     private String summary;
     private String coverUrl;
     private String bookUrl;

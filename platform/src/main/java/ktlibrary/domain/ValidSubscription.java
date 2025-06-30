@@ -10,6 +10,8 @@ import lombok.*;
 public class ValidSubscription extends AbstractEvent {
 
     private Long id;
-    private Boolean isValid;
-    private Object customerId;
+    private Long customerId;
+    private Long bookId;
+    private Long bookshelfId;
+    private String title;
 }
