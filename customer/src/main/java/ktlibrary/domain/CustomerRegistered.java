@@ -12,12 +12,12 @@ import lombok.*;
 public class CustomerRegistered extends AbstractEvent {
 
     private Long id;
-    private String name;
-    private String email;
     private Boolean isKtUser;
 
     public CustomerRegistered(Customer aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.isKtUser = aggregate.getIsKtUser();
     }
 
     public CustomerRegistered() {
