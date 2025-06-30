@@ -21,6 +21,8 @@ public class BookRequested extends AbstractEvent {
 
     public BookRequested(Customer aggregate) {
         super(aggregate);
+        // this.id = aggregate.id;
+        // this.subsciptionId = aggregate.subsciptionId;
     }
 
     public BookRequested() {
@@ -31,6 +33,19 @@ public class BookRequested extends AbstractEvent {
 }   
     public Long getCustomerId(){
         return id;
+    }
+
+
+    public void setCustomerId(Long customerId) {
+        this.id = customerId;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
 }
