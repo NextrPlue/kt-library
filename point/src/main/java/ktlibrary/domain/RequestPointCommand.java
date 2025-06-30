@@ -2,9 +2,13 @@ package ktlibrary.domain;
 
 import java.time.LocalDate;
 import java.util.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RequestPointCommand {
 
     private Long id;
