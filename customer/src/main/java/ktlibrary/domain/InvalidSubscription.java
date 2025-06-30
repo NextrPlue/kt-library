@@ -19,7 +19,7 @@ public class InvalidSubscription extends AbstractEvent {
         super(aggregate);
         this.id = aggregate.getId();
         this.isValid = aggregate.getIsValid();
-        this.customerId = aggregate.getCustomerId(); /
+        this.customerId = aggregate.getCustomerId(); 
     }
 
     public InvalidSubscription() {
