@@ -8,6 +8,5 @@ import lombok.Data;
 public class RequestBookCommand {
 
     private Long id;
-    private PointId pointId;
-    private SubsciptionId subsciptionId;
+    private Subsciption subsciptionId;
 }
