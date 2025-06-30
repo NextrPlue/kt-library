@@ -68,7 +68,7 @@ public class BookController {
     ) throws Exception {
         System.out.println("##### /book/setCategory  called #####");
         Book book = new Book();
-        book.setCategory(setCategoryCommand);
+        book.settingCategory(setCategoryCommand);
         bookRepository.save(book);
         return book;
     }
@@ -81,7 +81,7 @@ public class BookController {
     public Book requestRegistration(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody RequestRegistrationCommand requestRegistrationCommand
+        @RequestBody RegistBookCommand requestRegistrationCommand
     ) throws Exception {
         System.out.println("##### /book/requestRegistration  called #####");
         Book book = new Book();
