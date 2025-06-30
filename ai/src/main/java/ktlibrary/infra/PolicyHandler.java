@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.transaction.Transactional;
 import ktlibrary.config.kafka.KafkaProcessor;
 import ktlibrary.domain.PublishingRequested;
-import ktlibrary.application.StartPublishingService;  
+import ktlibrary.application.StartPublishingService;
+import ktlibrary.domain.Repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class PolicyHandler {
 
     @Autowired
-    private StartPublishingService startPublishingService; 
+    private StartPublishingService startPublishingService;
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString) {}
