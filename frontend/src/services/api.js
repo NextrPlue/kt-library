@@ -3,7 +3,7 @@ const API_CONFIG = {
   author: process.env.REACT_APP_AUTHOR_API_URL || 'http://localhost:8083',
   customer: process.env.REACT_APP_CUSTOMER_API_URL || 'http://localhost:8082',
   platform: process.env.REACT_APP_PLATFORM_API_URL || 'http://localhost:8081',
-  gateway: process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8080'
+  gateway: process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8088'
 };
 
 /**
@@ -74,7 +74,7 @@ export const authorAPI = {
    * @returns {Promise} 등록된 작가 정보
    */
   registerAuthor: async (authorData) => {
-    const url = `${API_CONFIG.author}/authors/registerauthor`;
+    const url = `${API_CONFIG.gateway}/authors/registerauthor`;
     
     const payload = {
       email: authorData.email,
@@ -93,7 +93,7 @@ export const authorAPI = {
    * @returns {Promise} 작가 목록
    */
   getAuthors: async () => {
-    const url = `${API_CONFIG.author}/authors`;
+    const url = `${API_CONFIG.gateway}/authors`;
     return await apiRequest(url);
   },
 
@@ -103,7 +103,7 @@ export const authorAPI = {
    * @returns {Promise} 작가 정보
    */
   getAuthor: async (authorId) => {
-    const url = `${API_CONFIG.author}/authors/${authorId}`;
+    const url = `${API_CONFIG.gateway}/authors/${authorId}`;
     return await apiRequest(url);
   },
 
@@ -113,7 +113,7 @@ export const authorAPI = {
    * @returns {Promise} 작가 정보
    */
   getAuthorByEmail: async (email) => {
-    const url = `${API_CONFIG.author}/authors/search/findByEmail?email=${encodeURIComponent(email)}`;
+    const url = `${API_CONFIG.gateway}/authors/search/findByEmail?email=${encodeURIComponent(email)}`;
     return await apiRequest(url);
   },
 
@@ -123,7 +123,7 @@ export const authorAPI = {
    * @returns {Promise} 승인된 작가 정보
    */
   approveAuthor: async (authorId) => {
-    const url = `${API_CONFIG.author}/authors/${authorId}/approveauthor`;
+    const url = `${API_CONFIG.gateway}/authors/${authorId}/approveauthor`;
     
     return await apiRequest(url, {
       method: 'PUT',
@@ -137,7 +137,7 @@ export const authorAPI = {
    * @returns {Promise} 거부된 작가 정보
    */
   disapproveAuthor: async (authorId) => {
-    const url = `${API_CONFIG.author}/authors/${authorId}/disapproveauthor`;
+    const url = `${API_CONFIG.gateway}/authors/${authorId}/disapproveauthor`;
     
     return await apiRequest(url, {
       method: 'PUT',
@@ -154,7 +154,7 @@ export const authorAPI = {
    * @returns {Promise} 수정된 작가 정보
    */
   editAuthor: async (authorId, updateData) => {
-    const url = `${API_CONFIG.author}/authors/${authorId}/editauthor`;
+    const url = `${API_CONFIG.gateway}/authors/${authorId}/editauthor`;
     
     const payload = {};
     if (updateData.email) payload.email = updateData.email;
