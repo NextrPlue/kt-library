@@ -5,6 +5,7 @@ import BookCard from './components/BookCard';
 import Login from './components/Login';
 import Register from './components/Register';
 import AdminLogin from './components/AdminLogin';
+import AuthorApproval from './components/AuthorApproval';
 import './App.css';
 
 // 테스트용 도서 데이터
@@ -142,13 +143,7 @@ const AuthorManuscripts = () => (
   </div>
 );
 
-// 관리자 페이지들
-const AdminAuthors = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>작가 승인</h1>
-    <p>작가 승인 관리 페이지입니다.</p>
-  </div>
-);
+// 관리자 페이지들 - AuthorApproval 컴포넌트를 사용
 
 const AdminBooks = () => (
   <div style={{ padding: '2rem' }}>
@@ -240,7 +235,7 @@ function App() {
           
           {/* 관리자 라우트 */}
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/authors" element={<AdminAuthors />} />
+          <Route path="/admin/authors" element={<AuthorApproval />} />
           <Route path="/admin/books" element={<AdminBooks />} />
           <Route path="/admin/customers" element={<AdminCustomers />} />
         </Routes>
