@@ -18,13 +18,24 @@ public class ReadBookViewHandler {
     private ReadBookRepository readBookRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverBookRead_UpdateView(@Payload ReadBook event) {
-    ReadBook readBook = new ReadBook();
-    readBook.setBookId(event.getBookId());
-    readBook.setTitle(event.getTitle());
-    readBook.setBookShelfId(event.getBookShelfId());
-    readBookRepository.save(readBook);
-}
+    public void whenBookRequested_then_CREATE_1(
+        @Payload BookRequested bookRequested
+    ) {
+        try {
+            if (!bookRequested.validate()) return;
 
+            // view 객체 생성
+            ReadBook readBook = new ReadBook();
+            // view 객체에 이벤트의 Value 를 set 함
+            readBook.setBookId(bookRequested.getBookId());
+            readBook.setBookShelfId(bookRequested.getBookshelfId());
+            readBook.setTitle(bookRequested.getTitle());
+            readBook.setPrice(bookRequested.getPrice());
+            // view 레파지 토리에 save
+            readBookRepository.save(readBook);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     //>>> DDD / CQRS
 }
