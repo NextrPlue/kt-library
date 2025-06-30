@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authorAPI } from '../services/api';
-import styles from './Register.module.css';
+import styles from '../styles/Register.module.css';
 
 const Register = () => {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authorAPI } from '../services/api';
-import styles from './Login.module.css';
+import styles from '../styles/Login.module.css';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -67,9 +67,9 @@ const Login = () => {
         email: formData.email,
         password: formData.password
       });
-      
+
       console.log('로그인 성공:', loginResponse);
-      
+
       // 사용자 데이터 구성
       const userData = {
         id: loginResponse.id,

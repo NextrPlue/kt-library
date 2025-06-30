@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { authorAPI } from '../services/api';
-import styles from './AuthorApproval.module.css';
+import styles from '../styles/AuthorApproval.module.css';
 
 const AuthorApproval = () => {
   const [pendingAuthors, setPendingAuthors] = useState([]);

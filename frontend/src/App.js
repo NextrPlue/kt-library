@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import BookCard from './components/BookCard';
-import Login from './components/Login';
-import Register from './components/Register';
-import AdminLogin from './components/AdminLogin';
-import AuthorApproval from './components/AuthorApproval';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AdminLogin from './pages/AdminLogin';
+import AuthorApproval from './pages/AuthorApproval';
 import './App.css';
 
 // 테스트용 도서 데이터
