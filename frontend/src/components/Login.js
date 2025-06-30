@@ -5,6 +5,7 @@ import styles from './Login.module.css';
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    role: '',
     email: '',
     password: ''
   });
@@ -29,6 +30,10 @@ const Login = () => {
 
   const validateForm = () => {
     const newErrors = {};
+
+    if (!formData.role) {
+      newErrors.role = '로그인 유형을 선택해주세요.';
+    }
 
     if (!formData.email.trim()) {
       newErrors.email = '이메일을 입력해주세요.';
@@ -70,35 +75,45 @@ const Login = () => {
 
       let userData;
       
-      // 임시 계정 정보
-      if (formData.email === 'author@kt.com' && formData.password === 'password') {
-        userData = {
-          id: 1,
-          name: '김작가',
+      // 역할별 임시 계정 정보
+      const demoAccounts = {
+        author: {
           email: 'author@kt.com',
-          role: 'author',
-          isApproved: true
-        };
-      } else if (formData.email === 'customer@kt.com' && formData.password === 'password') {
-        userData = {
-          id: 2,
-          name: '이고객',
-          email: 'customer@kt.com',
-          role: 'customer',
-          subscription: {
-            isValid: true,
-            plan: 'premium'
+          password: 'password',
+          data: {
+            id: 1,
+            name: '김작가',
+            email: 'author@kt.com',
+            role: 'author',
+            isApproved: true,
+            introduction: '소설과 에세이를 주로 집필하는 작가입니다.'
           }
-        };
-      } else if (formData.email === 'admin@kt.com' && formData.password === 'password') {
-        userData = {
-          id: 3,
-          name: '박관리자',
-          email: 'admin@kt.com',
-          role: 'admin'
-        };
+        },
+        customer: {
+          email: 'customer@kt.com',
+          password: 'password',
+          data: {
+            id: 2,
+            name: '이고객',
+            email: 'customer@kt.com',
+            role: 'customer',
+            subscription: {
+              isValid: true,
+              plan: 'premium'
+            },
+            points: 1500
+          }
+        }
+      };
+
+      const selectedAccount = demoAccounts[formData.role];
+      
+      if (selectedAccount && 
+          formData.email === selectedAccount.email && 
+          formData.password === selectedAccount.password) {
+        userData = selectedAccount.data;
       } else {
-        throw new Error('이메일 또는 비밀번호가 잘못되었습니다.');
+        throw new Error(`${getRoleDisplayName(formData.role)} 계정 정보가 일치하지 않습니다.`);
       }
 
       // 로컬 스토리지에 사용자 정보 저장
@@ -112,9 +127,6 @@ const Login = () => {
           break;
         case 'customer':
           navigate('/customer/books');
-          break;
-        case 'admin':
-          navigate('/admin/authors');
           break;
         default:
           navigate('/');
@@ -132,6 +144,14 @@ const Login = () => {
     }
   };
 
+  const getRoleDisplayName = (role) => {
+    const roleNames = {
+      author: '작가',
+      customer: '고객'
+    };
+    return roleNames[role] || role;
+  };
+
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>
@@ -144,6 +164,52 @@ const Login = () => {
         </div>
 
         <form className={styles.loginForm} onSubmit={handleSubmit}>
+          {/* 역할 선택 섹션 */}
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel}>
+              <span className="material-icons">account_circle</span>
+              로그인 유형
+            </label>
+            <div className={styles.roleSelection}>
+              <div 
+                className={`${styles.roleOption} ${formData.role === 'customer' ? styles.selected : ''}`}
+                onClick={() => handleChange({ target: { name: 'role', value: 'customer' } })}
+              >
+                <input
+                  type="radio"
+                  name="role"
+                  value="customer"
+                  checked={formData.role === 'customer'}
+                  onChange={handleChange}
+                  className={styles.roleInput}
+                />
+                <div className={styles.roleContent}>
+                  <span className="material-icons">person</span>
+                  <span>고객</span>
+                </div>
+              </div>
+              
+              <div 
+                className={`${styles.roleOption} ${formData.role === 'author' ? styles.selected : ''}`}
+                onClick={() => handleChange({ target: { name: 'role', value: 'author' } })}
+              >
+                <input
+                  type="radio"
+                  name="role"
+                  value="author"
+                  checked={formData.role === 'author'}
+                  onChange={handleChange}
+                  className={styles.roleInput}
+                />
+                <div className={styles.roleContent}>
+                  <span className="material-icons">edit</span>
+                  <span>작가</span>
+                </div>
+              </div>
+            </div>
+            {errors.role && <span className={styles.errorMessage}>{errors.role}</span>}
+          </div>
+
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.formLabel}>
               <span className="material-icons">email</span>
@@ -200,7 +266,7 @@ const Login = () => {
             ) : (
               <>
                 <span className="material-icons">login</span>
-                로그인
+                {formData.role ? `${getRoleDisplayName(formData.role)}으로 로그인` : '로그인'}
               </>
             )}
           </button>
@@ -210,13 +276,10 @@ const Login = () => {
           <p className={styles.demoTitle}>데모 계정:</p>
           <div className={styles.demoAccounts}>
             <div className={styles.demoAccount}>
-              <strong>작가:</strong> author@kt.com / password
+              <strong>👤 고객:</strong> customer@kt.com / password
             </div>
             <div className={styles.demoAccount}>
-              <strong>고객:</strong> customer@kt.com / password
-            </div>
-            <div className={styles.demoAccount}>
-              <strong>관리자:</strong> admin@kt.com / password
+              <strong>✏️ 작가:</strong> author@kt.com / password
             </div>
           </div>
         </div>
