@@ -77,6 +77,9 @@ public static void isSubscribed(BookRequested bookRequested) {
         }
     });
 }
+    public Long getCustomerId() {
+        return this.customer != null ? this.customer.getId() : null;
+    }
 
     //>>> Clean Arch / Port Method
 
