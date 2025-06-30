@@ -61,7 +61,7 @@ public class Book {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void transformEbook(TransformEbookCommand transformEbookCommand) {
+    public void transformEbook(GenerateEbookCommand transformEbookCommand) {
         //implement business logic here:
 
     }
