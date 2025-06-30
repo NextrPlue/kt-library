@@ -32,6 +32,9 @@ public class Author {
     private Boolean isApproved = false;
 
     @Column(nullable = false)
+    private Boolean isAdmin = false;
+
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -75,6 +78,7 @@ public class Author {
         this.name = registerAuthorCommand.getName().trim();
         this.introduction = registerAuthorCommand.getIntroduction() != null ? registerAuthorCommand.getIntroduction().trim() : "";
         this.isApproved = false;
+        this.isAdmin = false;  // 일반 작가는 관리자가 아님
 
         AuthorRegistered authorRegistered = new AuthorRegistered(this);
         authorRegistered.publishAfterCommit();
