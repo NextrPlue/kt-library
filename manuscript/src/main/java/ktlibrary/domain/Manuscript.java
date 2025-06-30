@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.persistence.*;
 import ktlibrary.ManuscriptApplication;
 import lombok.Data;
+import ktlibrary.infra.ReadAuthorRepository;
 
 @Entity
 @Table(name = "Manuscript_table")
@@ -55,37 +56,59 @@ public class Manuscript {
         return manuscriptRepository;
     }
 
-    //<<< Clean Arch / Port Method
-    public void registerManuscript(
-        RegisterManuscriptCommand registerManuscriptCommand
-    ) {
-        //implement business logic here:
-        this.authorId = registerManuscriptCommand.getAuthorId();
-        this.manuscriptTitle = registerManuscriptCommand.getManuscriptTitle();
-        this.manuscriptContent = registerManuscriptCommand.getManuscriptContent();
+    private static ReadAuthorRepository readAuthorRepository() {
+        return ManuscriptApplication.applicationContext.getBean(ReadAuthorRepository.class);
+    }
+    
 
+    //<<< Clean Arch / Port Method
+    public void registerManuscript(RegisterManuscriptCommand command) {
+
+        // 승인 여부 확인
+        ReadAuthor author = readAuthorRepository().findByAuthorId(command.getAuthorId()).stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("작가 정보가 없습니다."));
+
+        if (!author.getIsApproved()) {
+            throw new IllegalStateException("승인되지 않은 작가는 원고를 등록할 수 없습니다.");
+        }
+
+        this.authorId = command.getAuthorId();
+        this.manuscriptTitle = command.getManuscriptTitle();
+        this.manuscriptContent = command.getManuscriptContent();
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void editManuscript(EditManuscriptCommand editManuscriptCommand) {
-        this.authorId = editManuscriptCommand.getAuthorId();
-        this.manuscriptTitle = editManuscriptCommand.getManuscriptTitle();
-        this.manuscriptContent = editManuscriptCommand.getManuscriptContent();
+    public void editManuscript(EditManuscriptCommand command) {
+        // 승인여부 확인
+        ReadAuthor author = readAuthorRepository().findByAuthorId(command.getAuthorId()).stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("작가 정보가 없습니다."));
 
+        if (!author.getIsApproved()) {
+            throw new IllegalStateException("승인되지 않은 작가는 원고를 수정할 수 없습니다.");
+        }
+
+        this.authorId = command.getAuthorId();
+        this.manuscriptTitle = command.getManuscriptTitle();
+        this.manuscriptContent = command.getManuscriptContent();
     }
-
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void requestPublishing(
-        RequestPublishingCommand requestPublishingCommand
-    ) {
-        //implement business logic here:
+    public void requestPublishing(RequestPublishingCommand command) {
 
-        this.authorName = requestPublishingCommand.getAuthorName();
-        this.authorIntroduction = requestPublishingCommand.getAuthorIntroduction();
+        // 등록된 원고가 있는지 확인
+        if (this.manuscriptTitle == null || this.manuscriptTitle.trim().isEmpty()
+            || this.manuscriptContent == null || this.manuscriptContent.trim().isEmpty()) {
+            throw new IllegalStateException("원고가 등록되지 않았습니다. 출간 요청 불가합니다.");
+        }
+
+        this.authorName = command.getAuthorName();
+        this.authorIntroduction = command.getAuthorIntroduction();
 
         Manuscript.repository().save(this);
+
         PublishingRequested publishingRequested = new PublishingRequested(this);
         publishingRequested.publishAfterCommit();
     }
