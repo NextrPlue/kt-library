@@ -50,6 +50,15 @@ public class Author {
         updatedAt = new Date();
     }
 
+    @PostPersist
+    protected void afterCreate() {
+        // 새로 등록된 작가인 경우 이벤트 발행
+        if (this.isNewlyRegistered) {
+            AuthorRegistered authorRegistered = new AuthorRegistered(this);
+            authorRegistered.publish();  // 즉시 발행 (이미 저장됨)
+        }
+    }
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new Date();
@@ -61,6 +70,10 @@ public class Author {
         );
         return authorRepository;
     }
+
+    // 새로 등록된 작가인지 확인하는 플래그
+    @Transient
+    private boolean isNewlyRegistered = false;
 
     //<<< Clean Arch / Port Method
     public void registerAuthor(RegisterAuthorCommand registerAuthorCommand) {
@@ -83,9 +96,9 @@ public class Author {
         this.password = registerAuthorCommand.getPassword() != null ? registerAuthorCommand.getPassword() : "defaultPassword";
         this.isApproved = false;
         this.isAdmin = false;  // 일반 작가는 관리자가 아님
+        this.isNewlyRegistered = true;  // 새로 등록됨을 표시
 
-        AuthorRegistered authorRegistered = new AuthorRegistered(this);
-        authorRegistered.publishAfterCommit();
+        // 이벤트 발행은 @PostPersist에서 처리
     }
 
     //>>> Clean Arch / Port Method
