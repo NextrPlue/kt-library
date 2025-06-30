@@ -47,7 +47,7 @@ public class BookController {
     public Book transformEbook(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody TransformEbookCommand transformEbookCommand
+        @RequestBody GenerateEbookCommand transformEbookCommand
     ) throws Exception {
         System.out.println("##### /book/transformEbook  called #####");
         Book book = new Book();
