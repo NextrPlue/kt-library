@@ -68,7 +68,7 @@ public class Book {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void setCategory(SetCategoryCommand setCategoryCommand) {
+    public void settingCategory(SetCategoryCommand setCategoryCommand) {
         //implement business logic here:
 
     }
@@ -76,7 +76,7 @@ public class Book {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void requestRegistration(
-        RequestRegistrationCommand requestRegistrationCommand
+        RegistBookCommand requestRegistrationCommand
     ) {
         //implement business logic here:
 
