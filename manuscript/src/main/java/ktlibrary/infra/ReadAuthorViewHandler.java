@@ -27,6 +27,7 @@ public class ReadAuthorViewHandler {
             // view 객체 생성
             ReadAuthor readAuthor = new ReadAuthor();
             // view 객체에 이벤트의 Value 를 set 함
+            readAuthor.setId(authorRegistered.getId());  // Author ID를 ReadAuthor ID로 사용
             readAuthor.setAuthorId(authorRegistered.getId());
             readAuthor.setIsApproved(authorRegistered.getIsApproved());
             readAuthor.setAuthorName(authorRegistered.getName());
