@@ -127,5 +127,18 @@ public class AuthorController {
             throw new Exception(e.getMessage());
         }
     }
+    
+    @RequestMapping(
+        value = "/authors",
+        method = RequestMethod.GET,
+        produces = "application/json;charset=UTF-8"
+    )
+    public Iterable<Author> getAllAuthors(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /authors getAllAuthors called #####");
+        return authorRepository.findAll();
+    }
 }
 //>>> Clean Arch / Inbound Adaptor
