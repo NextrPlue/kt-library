@@ -175,11 +175,6 @@ public class Author {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         
-        // 관리자가 아닌 경우 승인 상태 확인
-        if (!author.isAdminUser() && !author.getIsApproved()) {
-            throw new IllegalStateException("승인 대기 중인 계정입니다. 관리자 승인을 기다려주세요.");
-        }
-        
         // 임시 토큰 생성 (실제로는 JWT 등을 사용)
         String token = "temp_token_" + author.getId() + "_" + System.currentTimeMillis();
         
