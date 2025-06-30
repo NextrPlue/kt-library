@@ -124,7 +124,13 @@ const Navigation = () => {
       <div className={styles.navigationContainer}>
         <div className={styles.navigationContent}>
           <div className={styles.navigationLeft}>
-            <div className={styles.navigationLogo} onClick={() => navigate('/')}>
+            <div className={styles.navigationLogo} onClick={() => {
+              if (user && user.role === 'admin') {
+                navigate('/admin/authors');
+              } else {
+                navigate('/');
+              }
+            }}>
               <div className={styles.logoIcon}>
                 <span className="material-icons">menu_book</span>
               </div>

@@ -1,9 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import BookCard from './components/BookCard';
 import Login from './components/Login';
 import Register from './components/Register';
+import AdminLogin from './components/AdminLogin';
 import './App.css';
 
 // 테스트용 도서 데이터
@@ -36,6 +37,8 @@ const sampleBooks = [
 
 // 임시 페이지 컴포넌트들
 const HomePage = () => {
+  const navigate = useNavigate();
+  
   const handleBookClick = (book) => {
     console.log('책 클릭:', book);
     alert(`"${book.title}" 책을 선택했습니다!`);
@@ -79,20 +82,7 @@ const HomePage = () => {
             고객으로 로그인
           </button>
           
-          <button 
-            onClick={() => {
-              localStorage.setItem('user', JSON.stringify({
-                id: 3,
-                name: '박관리자',
-                email: 'admin@example.com',
-                role: 'admin'
-              }));
-              window.location.reload();
-            }}
-            style={{ padding: '0.5rem 1rem', backgroundColor: '#dc2626', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-          >
-            관리자로 로그인
-          </button>
+
         </div>
       </div>
       
@@ -109,6 +99,35 @@ const HomePage = () => {
           ))}
         </div>
       </div>
+      
+      {/* 관리자 로그인 링크 */}
+      <div style={{ 
+        marginTop: '4rem', 
+        textAlign: 'center', 
+        paddingTop: '2rem', 
+        borderTop: '1px solid #e5e7eb'
+      }}>
+        <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+          시스템 관리자이신가요?
+        </p>
+        <button 
+          onClick={() => navigate('/admin')}
+          style={{ 
+            padding: '0.5rem 1rem', 
+            backgroundColor: '#dc2626', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '0.25rem',
+            fontSize: '0.875rem',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#991b1b'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
+        >
+          🔐 관리자 로그인
+        </button>
+      </div>
     </div>
   );
 };
@@ -120,6 +139,28 @@ const AuthorManuscripts = () => (
   <div style={{ padding: '2rem' }}>
     <h1>내 원고</h1>
     <p>작가의 원고 목록입니다.</p>
+  </div>
+);
+
+// 관리자 페이지들
+const AdminAuthors = () => (
+  <div style={{ padding: '2rem' }}>
+    <h1>작가 승인</h1>
+    <p>작가 승인 관리 페이지입니다.</p>
+  </div>
+);
+
+const AdminBooks = () => (
+  <div style={{ padding: '2rem' }}>
+    <h1>도서 관리</h1>
+    <p>도서 관리 페이지입니다.</p>
+  </div>
+);
+
+const AdminCustomers = () => (
+  <div style={{ padding: '2rem' }}>
+    <h1>고객 관리</h1>
+    <p>고객 관리 페이지입니다.</p>
   </div>
 );
 
@@ -173,27 +214,7 @@ const CustomerPoints = () => (
   </div>
 );
 
-// 관리자 페이지들
-const AdminAuthors = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>작가 승인</h1>
-    <p>작가 승인 관리 페이지입니다.</p>
-  </div>
-);
 
-const AdminBooks = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>도서 관리</h1>
-    <p>도서 관리 페이지입니다.</p>
-  </div>
-);
-
-const AdminCustomers = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>고객 관리</h1>
-    <p>고객 관리 페이지입니다.</p>
-  </div>
-);
 
 function App() {
   return (
@@ -218,6 +239,7 @@ function App() {
           <Route path="/customer/points" element={<CustomerPoints />} />
           
           {/* 관리자 라우트 */}
+          <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/authors" element={<AdminAuthors />} />
           <Route path="/admin/books" element={<AdminBooks />} />
           <Route path="/admin/customers" element={<AdminCustomers />} />
