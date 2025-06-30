@@ -50,41 +50,6 @@ const HomePage = () => {
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <h1>KT Library 홈페이지</h1>
         <p>도서 출판 및 구독 플랫폼에 오신 것을 환영합니다!</p>
-        
-        {/* 테스트용 로그인 버튼들 */}
-        <div style={{ marginTop: '2rem', display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <button 
-            onClick={() => {
-              localStorage.setItem('user', JSON.stringify({
-                id: 1,
-                name: '김작가',
-                email: 'author@example.com',
-                role: 'author'
-              }));
-              window.location.reload();
-            }}
-            style={{ padding: '0.5rem 1rem', backgroundColor: '#059669', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-          >
-            작가로 로그인
-          </button>
-          
-          <button 
-            onClick={() => {
-              localStorage.setItem('user', JSON.stringify({
-                id: 2,
-                name: '이고객',
-                email: 'customer@example.com',
-                role: 'customer'
-              }));
-              window.location.reload();
-            }}
-            style={{ padding: '0.5rem 1rem', backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '0.25rem' }}
-          >
-            고객으로 로그인
-          </button>
-          
-
-        </div>
       </div>
       
       {/* 도서 카드 테스트 섹션 */}
