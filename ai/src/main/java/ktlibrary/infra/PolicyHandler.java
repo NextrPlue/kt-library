@@ -7,6 +7,7 @@ import javax.naming.NameParser;
 import javax.transaction.Transactional;
 import ktlibrary.config.kafka.KafkaProcessor;
 import ktlibrary.domain.*;
+import ktlibrary.domain.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;

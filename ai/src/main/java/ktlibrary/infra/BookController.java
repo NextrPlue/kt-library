@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import ktlibrary.domain.*;
+import ktlibrary.domain.Repository.*;
+import ktlibrary.domain.Command.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,11 +30,11 @@ public class BookController {
     public Book requestCover(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody RequestCoverCommand requestCoverCommand
+        @RequestBody GenerateCoverCommand generateCoverCommand
     ) throws Exception {
         System.out.println("##### /book/requestCover  called #####");
         Book book = new Book();
-        book.requestCover(requestCoverCommand);
+        book.requestCover(generateCoverCommand);
         bookRepository.save(book);
         return book;
     }
@@ -45,7 +47,7 @@ public class BookController {
     public Book transformEbook(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody TransformEbookCommand transformEbookCommand
+        @RequestBody GenerateEbookCommand transformEbookCommand
     ) throws Exception {
         System.out.println("##### /book/transformEbook  called #####");
         Book book = new Book();
@@ -66,7 +68,7 @@ public class BookController {
     ) throws Exception {
         System.out.println("##### /book/setCategory  called #####");
         Book book = new Book();
-        book.setCategory(setCategoryCommand);
+        book.settingCategory(setCategoryCommand);
         bookRepository.save(book);
         return book;
     }
@@ -79,7 +81,7 @@ public class BookController {
     public Book requestRegistration(
         HttpServletRequest request,
         HttpServletResponse response,
-        @RequestBody RequestRegistrationCommand requestRegistrationCommand
+        @RequestBody RegistBookCommand requestRegistrationCommand
     ) throws Exception {
         System.out.println("##### /book/requestRegistration  called #####");
         Book book = new Book();
