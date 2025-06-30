@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.util.Optional;
 
 //<<< PoEAA / Repository
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000"})
 @RepositoryRestResource(collectionResourceRel = "authors", path = "authors")
 public interface AuthorRepository
     extends PagingAndSortingRepository<Author, Long> {
