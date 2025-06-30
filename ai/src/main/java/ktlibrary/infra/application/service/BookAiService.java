@@ -9,23 +9,29 @@ import org.springframework.stereotype.Service;
 public class BookAiService {
 
     private final SummaryService summaryService;
+    private final CoverService coverService;
 
     // 1. 원고 요약 생성
     public String generateSummary(GenerateSummaryCommand generateSummaryCommand) {
-        // 도메인 객체에서 필요한 정보 추출
-        String manuscriptTitle = generateSummaryCommand.getManuscriptTitle();
-        String manuscriptContent = generateSummaryCommand.getManuscriptContent();
-        String authorName = generateSummaryCommand.getAuthorName();
-        String introduction = generateSummaryCommand.getIntroduction();
+        String summary = summaryService.summarize(
+                generateSummaryCommand.getManuscriptTitle(),
+                generateSummaryCommand.getManuscriptContent(),
+                generateSummaryCommand.getAuthorName(),
+                generateSummaryCommand.getIntroduction()
+        );
 
-        // SummaryService를 호출하여 최종 요약 생성
-        return summaryService.summarize(manuscriptTitle, manuscriptContent, authorName, introduction);
+        generateSummaryCommand.setSummary(summary);
+
+        return summary;
     }
 
-//    // 2. 커버 이미지 생성
-//    public String generateCoverImage(GenerateCoverCommand generateCoverCommand) {
-//
-//    }
+    // 2. 커버 이미지 생성
+    public String generateCoverImage(GenerateSummaryCommand generateSummaryCommand) {
+        String title = generateSummaryCommand.getManuscriptTitle();
+        String summary = generateSummaryCommand.getSummary();
+
+        return coverService.generateCoverImage(title, summary);
+    }
 //
 //    // 3. 카테고리 자동 분류
 //    public String classifyCategory(String summary) {
