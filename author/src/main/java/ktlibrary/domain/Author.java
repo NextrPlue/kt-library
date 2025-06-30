@@ -29,6 +29,9 @@ public class Author {
     private String introduction;
 
     @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
     private Boolean isApproved = false;
 
     @Column(nullable = false)
@@ -77,6 +80,7 @@ public class Author {
         this.email = registerAuthorCommand.getEmail().trim();
         this.name = registerAuthorCommand.getName().trim();
         this.introduction = registerAuthorCommand.getIntroduction() != null ? registerAuthorCommand.getIntroduction().trim() : "";
+        this.password = registerAuthorCommand.getPassword() != null ? registerAuthorCommand.getPassword() : "defaultPassword";
         this.isApproved = false;
         this.isAdmin = false;  // 일반 작가는 관리자가 아님
 
@@ -131,6 +135,44 @@ public class Author {
 
         AuthorEdited authorEdited = new AuthorEdited(this);
         authorEdited.publishAfterCommit();
+    }
+    //>>> Clean Arch / Port Method
+
+    //<<< Clean Arch / Port Method
+    public boolean isAdminUser() {
+        return this.isAdmin != null && this.isAdmin;
+    }
+    
+    public boolean validatePassword(String inputPassword) {
+        return this.password != null && this.password.equals(inputPassword);
+    }
+    
+    public static LoginResponse login(LoginCommand loginCommand, AuthorRepository repository) {
+        // 이메일로 사용자 찾기
+        java.util.Optional<Author> authorOpt = repository.findByEmail(loginCommand.getEmail());
+        
+        if (authorOpt.isEmpty()) {
+            throw new IllegalArgumentException("등록되지 않은 이메일입니다.");
+        }
+        
+        Author author = authorOpt.get();
+        
+        // 비밀번호 검증
+        if (!author.validatePassword(loginCommand.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        
+        // 관리자가 아닌 경우 승인 상태 확인
+        if (!author.isAdminUser() && !author.getIsApproved()) {
+            throw new IllegalStateException("승인 대기 중인 계정입니다. 관리자 승인을 기다려주세요.");
+        }
+        
+        // 임시 토큰 생성 (실제로는 JWT 등을 사용)
+        String token = "temp_token_" + author.getId() + "_" + System.currentTimeMillis();
+        
+        String message = author.isAdminUser() ? "관리자 로그인 성공" : "작가 로그인 성공";
+        
+        return new LoginResponse(author, token, message);
     }
     //>>> Clean Arch / Port Method
 

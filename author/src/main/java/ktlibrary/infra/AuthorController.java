@@ -102,5 +102,30 @@ public class AuthorController {
         authorRepository.save(author);
         return author;
     }
+    
+    @RequestMapping(
+        value = "/authors/login",
+        method = RequestMethod.POST,
+        produces = "application/json;charset=UTF-8"
+    )
+    public LoginResponse login(
+        @RequestBody LoginCommand loginCommand,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /authors/login called #####");
+        
+        try {
+            LoginResponse loginResponse = Author.login(loginCommand, authorRepository);
+            response.setStatus(HttpServletResponse.SC_OK);
+            return loginResponse;
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            throw new Exception(e.getMessage());
+        } catch (IllegalStateException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new Exception(e.getMessage());
+        }
+    }
 }
 //>>> Clean Arch / Inbound Adaptor
