@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authorAPI } from '../services/api';
 import styles from './Register.module.css';
 
 const Register = () => {
@@ -130,43 +131,60 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      // TODO: 실제 API 호출로 교체
-      // const response = await fetch('/api/auth/register', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     name: formData.name,
-      //     email: formData.email,
-      //     password: formData.password,
-      //     role: formData.role,
-      //     introduction: formData.introduction
-      //   }),
-      // });
+      let userData;
+      
+      if (formData.role === 'author') {
+        // 작가 등록 - Author 서비스 API 호출
+        console.log('작가 등록 API 호출 시작...');
+        
+        const authorResponse = await authorAPI.registerAuthor({
+          email: formData.email,
+          name: formData.name,
+          introduction: formData.introduction
+        });
+        
+        console.log('작가 등록 성공:', authorResponse);
+        
+        // Author 서비스에서 받은 데이터로 사용자 정보 구성
+        userData = {
+          id: authorResponse.id,
+          name: authorResponse.name,
+          email: authorResponse.email,
+          role: 'author',
+          introduction: authorResponse.introduction,
+          isApproved: authorResponse.isApproved || false, // 작가는 승인 대기 상태
+          createdAt: authorResponse.createdAt,
+          updatedAt: authorResponse.updatedAt
+        };
+        
+      } else {
+        // 고객 등록 - 현재는 임시 로직 (추후 Customer 서비스 연동 예정)
+        console.log('고객 등록 (임시 로직)...');
+        
+        // TODO: Customer API 연동
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 임시 로딩
+        
+        userData = {
+          id: Date.now(),
+          name: formData.name,
+          email: formData.email,
+          role: 'customer',
+          isApproved: true // 고객은 즉시 승인
+        };
+      }
 
-      // 임시 회원가입 로직 (데모용)
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 로딩 시뮬레이션
-
-      // 회원가입 성공 시 자동 로그인
-      const userData = {
-        id: Date.now(),
-        name: formData.name,
-        email: formData.email,
-        role: formData.role,
-        introduction: formData.introduction,
-        isApproved: formData.role === 'author' ? false : true // 작가는 승인 대기
-      };
-
+      // 로컬 스토리지에 사용자 정보 저장
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', 'demo_token_' + Date.now());
+      localStorage.setItem('token', `${formData.role}_token_${Date.now()}`);
 
       // 가입 완료 알림
-      alert(
-        formData.role === 'author' 
-          ? '작가 회원가입이 완료되었습니다. 관리자 승인 후 서비스를 이용하실 수 있습니다.'
-          : '회원가입이 완료되었습니다. 환영합니다!'
-      );
+      const successMessage = formData.role === 'author' 
+        ? `작가 회원가입이 완료되었습니다!\n\n📧 등록 이메일: ${userData.email}\n👤 작가명: ${userData.name}\n\n⏳ 관리자 승인 후 서비스를 이용하실 수 있습니다.`
+        : `회원가입이 완료되었습니다! 환영합니다! 🎉\n\n📧 등록 이메일: ${userData.email}\n👤 이름: ${userData.name}`;
+      
+      alert(successMessage);
+      
+      console.log('회원가입 완료, 사용자 데이터:', userData);
 
       // 역할에 따른 리다이렉트
       switch (formData.role) {
@@ -181,11 +199,26 @@ const Register = () => {
       }
 
       // 페이지 새로고침으로 네비게이션 업데이트
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
       
     } catch (error) {
+      console.error('회원가입 실패:', error);
+      
+      // 사용자 친화적인 오류 메시지
+      let errorMessage = '회원가입 중 오류가 발생했습니다.';
+      
+      if (error.message.includes('이미 등록된 이메일')) {
+        errorMessage = '이미 등록된 이메일입니다. 다른 이메일을 사용해주세요.';
+      } else if (error.message.includes('서버에 연결할 수 없습니다')) {
+        errorMessage = `${formData.role === 'author' ? 'Author' : 'Customer'} 서비스에 연결할 수 없습니다.\n서버가 실행 중인지 확인해주세요.\n\n🔧 로컬 환경: http://localhost:8083\n🐳 Docker 환경: author 컨테이너 확인`;
+      } else if (error.message.includes('필수')) {
+        errorMessage = '필수 정보가 누락되었습니다. 입력 내용을 확인해주세요.';
+      }
+      
       setErrors({
-        submit: error.message || '회원가입 중 오류가 발생했습니다.'
+        submit: errorMessage
       });
     } finally {
       setIsLoading(false);
