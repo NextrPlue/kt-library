@@ -13,8 +13,11 @@ import lombok.*;
 public class BookRequested extends AbstractEvent {
 
     private Long id;
-    private Long pointId;
     private Subsciption subsciptionId;
+     private Long bookId;
+    private Long bookshelfId;
+    private String title;
+    private Long price;
 
     public BookRequested(Customer aggregate) {
         super(aggregate);
