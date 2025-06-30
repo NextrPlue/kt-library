@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
 import ktlibrary.AiApplication;
+import ktlibrary.domain.Command.*;
+import ktlibrary.domain.Repository.*;
 import lombok.Data;
 
 @Entity
@@ -74,21 +76,21 @@ public class Book {
     }
 
     //<<< Clean Arch / Port Method
-    public void requestCover(RequestCoverCommand requestCoverCommand) {
+    public void requestCover(GenerateCoverCommand generateCoverCommand) {
         //implement business logic here:
 
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void transformEbook(TransformEbookCommand transformEbookCommand) {
+    public void transformEbook(GenerateEbookCommand transformEbookCommand) {
         //implement business logic here:
 
     }
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void setCategory(SetCategoryCommand setCategoryCommand) {
+    public void settingCategory(SetCategoryCommand setCategoryCommand) {
         //implement business logic here:
 
     }
@@ -96,7 +98,7 @@ public class Book {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void requestRegistration(
-        RequestRegistrationCommand requestRegistrationCommand
+        RegistBookCommand requestRegistrationCommand
     ) {
         //implement business logic here:
 
