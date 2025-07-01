@@ -1,7 +1,7 @@
-package ktlibrary.application;
+package ktlibrary.infra.application.service;
 
 import ktlibrary.domain.Book;
-import ktlibrary.domain.BookRepository;
+import ktlibrary.domain.Repository.BookRepository;
 import ktlibrary.domain.PublishingRequested;
 import ktlibrary.domain.StartPublishingCommand;
 import ktlibrary.domain.BookNotFoundException;
