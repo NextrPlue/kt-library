@@ -1,9 +1,6 @@
 // API 기본 설정
 const API_CONFIG = {
-  author: process.env.REACT_APP_AUTHOR_API_URL || 'http://localhost:8083',
-  customer: process.env.REACT_APP_CUSTOMER_API_URL || 'http://localhost:8082',
-  platform: process.env.REACT_APP_PLATFORM_API_URL || 'http://localhost:8081',
-  gateway: process.env.REACT_APP_GATEWAY_URL || 'http://localhost:8088'
+  gateway: 'http://localhost:8088'
 };
 
 /**
@@ -284,6 +281,61 @@ export const customerAPI = {
   }
 };
 
+
+/**
+ * Manuscript API 서비스
+ */
+export const manuscriptAPI = {
+  /**
+   * 원고 등록
+   */
+  registerManuscript: async (data) => {
+    const url = `${API_CONFIG.gateway}/manuscripts`;
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * 원고 수정
+   */
+  editManuscript: async (id, data) => {
+    const url = `${API_CONFIG.gateway}/manuscripts/${id}`;
+    return await apiRequest(url, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * 출판 요청 
+   */
+  requestPublishing: async (data) => {
+    const url = `${API_CONFIG.gateway}/manuscripts/requestpublishing`; 
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * 전체 원고 목록 조회
+   */
+  getAllManuscripts: async () => {
+    const url = `${API_CONFIG.gateway}/manuscripts`;
+    return await apiRequest(url);
+  },
+};
+
+
+
+
+
+
+
+
+
 /**
  * Platform API 서비스 (추후 확장용)
  */
@@ -294,5 +346,6 @@ export const platformAPI = {
 export default {
   authorAPI,
   customerAPI,
-  platformAPI
+  platformAPI,
+  manuscriptAPI,
 };
