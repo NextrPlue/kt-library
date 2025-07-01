@@ -7,6 +7,8 @@ import ktlibrary.domain.Command.GenerateSummaryCommand;
 import ktlibrary.domain.Command.GenerateCategoryCommand;
 import ktlibrary.domain.Command.RegistBookCommand;
 import ktlibrary.domain.Repository.BookRepository;
+import ktlibrary.infra.messaging.event.BookRegisteredEvent;
+import ktlibrary.infra.messaging.producer.BookEventPublisher;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class BookAiService {
     private final FileStorageService fileStorageService;
 
     private final BookRepository bookRepository;
+
+    private final BookEventPublisher bookEventPublisher;
 
     // 1. 원고 요약 생성
     public String generateSummary(GenerateSummaryCommand command) {
@@ -82,6 +86,7 @@ public class BookAiService {
         // 1. 요약 생성
         String summary = generateSummary(command);
         command.setSummary(summary);
+        System.out.println(summary);
 
         // 2. 커버 이미지 생성
         GenerateCoverCommand coverCommand = new GenerateCoverCommand();
@@ -95,6 +100,7 @@ public class BookAiService {
 
         String coverUrl = generateCoverImage(coverCommand);
         coverCommand.setCoverUrl(coverUrl);
+        System.out.println(coverUrl);
 
         // 3. 카테고리 생성
         GenerateCategoryCommand categoryCommand = new GenerateCategoryCommand();
@@ -108,9 +114,17 @@ public class BookAiService {
 
         String category = generateCategory(categoryCommand);
         categoryCommand.setCategory(category);
+        System.out.println(category);
 
         // 4. 전자책 생성
         GenerateEbookCommand ebookCommand = new GenerateEbookCommand();
+        ebookCommand.setId(command.getId());
+        ebookCommand.setManuscriptTitle(command.getManuscriptTitle());
+        ebookCommand.setManuscriptContent(command.getManuscriptContent());
+        ebookCommand.setAuthorId(command.getAuthorId());
+        ebookCommand.setAuthorName(command.getAuthorName());
+        ebookCommand.setIntroduction(command.getIntroduction());
+        
         byte[] ebookFile = generateEbook(ebookCommand);
 
         String bookUrl;
@@ -119,6 +133,7 @@ public class BookAiService {
         } catch (IOException e) {
             throw new RuntimeException("PDF 저장 중 오류가 발생했습니다.", e);
         }
+        System.out.println(bookUrl);
 
         // 5. 도서 등록
         RegistBookCommand registCommand = new RegistBookCommand();
@@ -133,8 +148,27 @@ public class BookAiService {
         registCommand.setCoverUrl(coverUrl);    // 커버 url
         registCommand.setCategory(category);    // 카테고리
         registCommand.setBookUrl(bookUrl);      // 전자책 url
+        registCommand.setPrice(Long.valueOf(1000));
 
-        // 도서 저장
-        return registerBook(registCommand);
+        // 도서 등록 후 이벤트 발행 추가
+        Book book = registerBook(registCommand);
+
+        // kafka 이벤트 발행
+        BookRegisteredEvent event = new BookRegisteredEvent(
+            book.getId(),
+            book.getManuscriptTitle(),
+            book.getManuscriptContent(),
+            book.getAuthorId(),
+            book.getAuthorName(),
+            book.getIntroduction(),
+            book.getSummary(),
+            book.getCoverUrl(),
+            book.getCategory(),
+            book.getBookUrl(),
+            book.getPrice()
+        );
+        bookEventPublisher.publish(event);
+
+        return book;
     }
 }
