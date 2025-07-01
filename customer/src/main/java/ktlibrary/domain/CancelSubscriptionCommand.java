@@ -8,5 +8,5 @@ import lombok.Data;
 public class CancelSubscriptionCommand {
 
     private Long id;
-    private Customer customerId;
+    private Long customerId;
 }
