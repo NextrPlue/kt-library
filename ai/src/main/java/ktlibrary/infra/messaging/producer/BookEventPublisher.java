@@ -14,7 +14,13 @@ public class BookEventPublisher {
 
     public void publish(BookRegisteredEvent event) {
         kafkaProcessor.outboundTopic().send(
-            MessageBuilder.withPayload(event).build()
+            MessageBuilder
+                .withPayload(event)
+                .setHeader("contentType", "application/json") // ✅ 명시
+                .setHeader("type", "BookRegisteredEvent")     // ✅ 조건 기반 리스너가 쓰려면 필요
+                .build()
         );
     }
+
+    
 }
