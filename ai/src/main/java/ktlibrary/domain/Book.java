@@ -22,10 +22,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 1000)
     private String summary;
 
+    @Column(length = 1000)
     private String coverUrl;
 
+    @Column(length = 1000)
     private String bookUrl;
 
     private Date createdAt;
@@ -34,6 +37,8 @@ public class Book {
 
     private String manuscriptTitle;
 
+    @Lob
+    @Column
     private String manuscriptContent;
 
     private Long authorId;
