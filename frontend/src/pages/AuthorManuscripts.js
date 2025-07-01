@@ -17,7 +17,14 @@ const AuthorManuscripts = () => {
         const res = await manuscriptAPI.getAllManuscripts();
         const all = res._embedded?.manuscripts || [];
 
-        const myList = all.filter(m => String(m.authorId) === String(user.id));
+        const myList = all
+          .filter(m => String(m.authorId) === String(user.id))
+          .map(m => {
+            const href = m._links.self.href;
+            const id = href.substring(href.lastIndexOf('/') + 1);
+            return { ...m, id };
+          });
+        
         setManuscripts(myList);
       } catch (err) {
         console.error('원고 목록 조회 실패:', err.message);
@@ -32,7 +39,7 @@ const AuthorManuscripts = () => {
   };
 
   const handlePublish = async (manuscript) => {
-    console.log('📦 출판 요청 직전 데이터:', manuscript);  // ✅ 여기에 추가!
+    console.log('📦 출판 요청 직전 데이터:', manuscript);
 
     try {
       await manuscriptAPI.requestPublishing({
