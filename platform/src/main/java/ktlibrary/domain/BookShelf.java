@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
 import ktlibrary.PlatformApplication;
+import ktlibrary.domain.BecameBestseller;
 import ktlibrary.domain.BookRead;
+import ktlibrary.domain.BookRegistered;
 import lombok.Data;
 
 @Entity
@@ -20,6 +22,8 @@ public class BookShelf {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private Long bookId;
 
     private String title;
 
@@ -50,123 +54,39 @@ public class BookShelf {
         return bookShelfRepository;
     }
 
-    //<<< Clean Arch / Port Method
-    public static void registBook(
-        RegisterationRequested registerationRequested
-    ) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        BookShelf bookShelf = new BookShelf();
-        repository().save(bookShelf);
-
-        */
-
-        /** Example 2:  finding and process
-        
-        // if registerationRequested.genAiId exists, use it
-        
-        // ObjectMapper mapper = new ObjectMapper();
-        // Map<, Object> bookMap = mapper.convertValue(registerationRequested.getGenAiId(), Map.class);
-
-        repository().findById(registerationRequested.get???()).ifPresent(bookShelf->{
-            
-            bookShelf // do something
-            repository().save(bookShelf);
-
-
-         });
-        */
-
+    public void regist(RegisterationRequested event) {
+        this.bookId = event.getBookId();
+        this.title = event.getTitle();
+        this.category = event.getCategory();
+        this.summary = event.getSummary();
+        this.authorId = event.getAuthorId();
+        this.authorName = event.getAuthorName();
+        this.introduction = event.getIntroduction();
+        this.coverUrl = event.getCoverUrl();
+        this.fileUrl = event.getFileUrl();
+        this.price = 1000L;
+        this.viewCount = 0L;
+        this.isBestSeller = false;
+    }
+    public BookRegistered createBookRegisteredEvent() {
+        return new BookRegistered(this);  // 생성자에서 BookShelf를 넘기면 내부에서 필요한 필드 꺼내게 설계
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void readBook(ValidSubscription validSubscription) {
-        //implement business logic here:
+    public BookReadResult readBy(Long customerId, AccessType accessType) {
 
-        /** Example 1:  new item 
-        BookShelf bookShelf = new BookShelf();
-        repository().save(bookShelf);
+        this.viewCount += 1;
 
-        BookRead bookRead = new BookRead(bookShelf);
-        bookRead.publishAfterCommit();
-        */
+        // 베스트셀러 승격 
+        boolean promoted = false;
+        if (this.viewCount >= 5 && !Boolean.TRUE.equals(this.isBestSeller)) {
+            this.isBestSeller = true;
+            promoted = true;
+        }
 
-        /** Example 2:  finding and process
-        
-        // if validSubscription.customerId exists, use it
-        
-        // ObjectMapper mapper = new ObjectMapper();
-        // Map<Long, Object> subsciptionMap = mapper.convertValue(validSubscription.getCustomerId(), Map.class);
-
-        repository().findById(validSubscription.get???()).ifPresent(bookShelf->{
-            
-            bookShelf // do something
-            repository().save(bookShelf);
-
-            BookRead bookRead = new BookRead(bookShelf);
-            bookRead.publishAfterCommit();
-
-         });
-        */
-
+        // 결과 객체 반환
+        return new BookReadResult(this.viewCount, promoted);
     }
 
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void readBook(PointDeducted pointDeducted) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        BookShelf bookShelf = new BookShelf();
-        repository().save(bookShelf);
-
-        BookRead bookRead = new BookRead(bookShelf);
-        bookRead.publishAfterCommit();
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointDeducted.get???()).ifPresent(bookShelf->{
-            
-            bookShelf // do something
-            repository().save(bookShelf);
-
-            BookRead bookRead = new BookRead(bookShelf);
-            bookRead.publishAfterCommit();
-
-         });
-        */
-
-    }
-
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void isRead(BookRead bookRead) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        BookShelf bookShelf = new BookShelf();
-        repository().save(bookShelf);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(bookRead.get???()).ifPresent(bookShelf->{
-            
-            bookShelf // do something
-            repository().save(bookShelf);
-
-
-         });
-        */
-
-    }
-    //>>> Clean Arch / Port Method
 
 }
-//>>> DDD / Aggregate Root
+

@@ -12,11 +12,15 @@ import lombok.*;
 public class ValidSubscription extends AbstractEvent {
 
     private Long id;
-    private Boolean isValid;
-    private CustomerId customerId;
+    private Long customerId; //
+    private Long bookId;
+    private Long bookshelfId;
+    private String title;
 
     public ValidSubscription(Subsciption aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.customerId = aggregate.getCustomerId();
     }
 
     public ValidSubscription() {

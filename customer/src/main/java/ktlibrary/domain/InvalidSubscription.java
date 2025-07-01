@@ -13,10 +13,13 @@ public class InvalidSubscription extends AbstractEvent {
 
     private Long id;
     private Boolean isValid;
-    private CustomerId customerId;
+    private Long customerId;
 
     public InvalidSubscription(Subsciption aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.isValid = aggregate.getIsValid();
+        this.customerId = aggregate.getCustomerId(); 
     }
 
     public InvalidSubscription() {

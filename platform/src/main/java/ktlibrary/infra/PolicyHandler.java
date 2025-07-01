@@ -1,5 +1,7 @@
 package ktlibrary.infra;
 
+import ktlibrary.BookShelfApplicationService;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.naming.NameParser;
@@ -18,9 +20,8 @@ import org.springframework.stereotype.Service;
 public class PolicyHandler {
 
     @Autowired
-    BookShelfRepository bookShelfRepository;
+    private BookShelfApplicationService bookShelfService;
 
-    @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString) {}
 
     @StreamListener(
@@ -35,17 +36,14 @@ public class PolicyHandler {
             "\n\n##### listener RegistBook : " + registerationRequested + "\n\n"
         );
 
-        // Comments //
-        //도서를 등록합니다.
-
-        // Sample Logic //
-        BookShelf.registBook(event);
+        bookShelfService.processRegisterBook(event);
     }
 
     @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='ValidSubscription'"
+        value = KafkaProcessor.INPUT,  // Kafka 입력
+        condition = "headers['type']=='ValidSubscription'" //특정 이벤트 타입만
     )
+    // validsubscription 이벤트 타입 발생-> 메서드 실행
     public void wheneverValidSubscription_ReadBook(
         @Payload ValidSubscription validSubscription
     ) {
@@ -54,11 +52,7 @@ public class PolicyHandler {
             "\n\n##### listener ReadBook : " + validSubscription + "\n\n"
         );
 
-        // Comments //
-        //도서를 열람합니다.
-
-        // Sample Logic //
-        BookShelf.readBook(event);
+        bookShelfService.processSubscriptionReading(validSubscription);
     }
 
     @StreamListener(
@@ -73,11 +67,8 @@ public class PolicyHandler {
             "\n\n##### listener ReadBook : " + pointDeducted + "\n\n"
         );
 
-        // Comments //
-        //도서를 열람합니다.
-
-        // Sample Logic //
-        BookShelf.readBook(event);
+       
+        bookShelfService.processPointReading(pointDeducted);
     }
 
     @StreamListener(
@@ -88,11 +79,13 @@ public class PolicyHandler {
         BookRead event = bookRead;
         System.out.println("\n\n##### listener IsRead : " + bookRead + "\n\n");
 
-        // Comments //
-        //5회 이상 열람 시 베스트셀러로 선정
+        bookShelfService.processBookReading(bookRead);
+    }
 
-        // Sample Logic //
-        BookShelf.isRead(event);
+    public void processBookReading(BookRead event) {
+        // 기본적으로 아무 로직이 필요 없다면 로그만 출력해도 됨
+        System.out.println("Processing BookRead event: " + event);
+        
     }
 }
 //>>> Clean Arch / Inbound Adaptor

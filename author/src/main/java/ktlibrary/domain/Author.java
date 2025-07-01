@@ -50,6 +50,15 @@ public class Author {
         updatedAt = new Date();
     }
 
+    @PostPersist
+    protected void afterCreate() {
+        // 새로 등록된 작가인 경우 이벤트 발행
+        if (this.isNewlyRegistered) {
+            AuthorRegistered authorRegistered = new AuthorRegistered(this);
+            authorRegistered.publish();  // 즉시 발행 (이미 저장됨)
+        }
+    }
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = new Date();
@@ -61,6 +70,10 @@ public class Author {
         );
         return authorRepository;
     }
+
+    // 새로 등록된 작가인지 확인하는 플래그
+    @Transient
+    private boolean isNewlyRegistered = false;
 
     //<<< Clean Arch / Port Method
     public void registerAuthor(RegisterAuthorCommand registerAuthorCommand) {
@@ -83,9 +96,9 @@ public class Author {
         this.password = registerAuthorCommand.getPassword() != null ? registerAuthorCommand.getPassword() : "defaultPassword";
         this.isApproved = false;
         this.isAdmin = false;  // 일반 작가는 관리자가 아님
+        this.isNewlyRegistered = true;  // 새로 등록됨을 표시
 
-        AuthorRegistered authorRegistered = new AuthorRegistered(this);
-        authorRegistered.publishAfterCommit();
+        // 이벤트 발행은 @PostPersist에서 처리
     }
 
     //>>> Clean Arch / Port Method
@@ -160,11 +173,6 @@ public class Author {
         // 비밀번호 검증
         if (!author.validatePassword(loginCommand.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        
-        // 관리자가 아닌 경우 승인 상태 확인
-        if (!author.isAdminUser() && !author.getIsApproved()) {
-            throw new IllegalStateException("승인 대기 중인 계정입니다. 관리자 승인을 기다려주세요.");
         }
         
         // 임시 토큰 생성 (실제로는 JWT 등을 사용)

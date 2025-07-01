@@ -31,9 +31,20 @@ public class Book {
     @Column(length = 1000)
     private String bookUrl;
 
+    @Column(updatable = false)
     private Date createdAt;
 
     private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
 
     private String manuscriptTitle;
 
@@ -56,6 +67,17 @@ public class Book {
             BookRepository.class
         );
         return bookRepository;
+    }
+
+    // Aggregate의 publishingStarted 인스턴스 메서드
+    public void publishingStarted(StartPublishingCommand command) {
+        System.out.println("Setter 실행됨: " + command.getManuscriptTitle());
+        this.manuscriptTitle = command.getManuscriptTitle();
+        this.manuscriptContent = command.getManuscriptContent();
+        this.authorId = command.getAuthorId();
+        this.authorName = command.getAuthorName();
+        this.introduction = command.getAuthorIntroduction();
+        this.updatedAt = new Date();
     }
 
     //<<< Clean Arch / Port Method
@@ -108,30 +130,30 @@ public class Book {
     //>>> Clean Arch / Port Method
 
     //<<< Clean Arch / Port Method
-    public static void publishingStarted(
-        PublishingRequested publishingRequested
-    ) {
-        //implement business logic here:
+    // public static void publishingStarted(
+    //     PublishingRequested publishingRequested
+    // ) {
+    //     //implement business logic here:
 
-        /** Example 1:  new item 
-        Book book = new Book();
-        repository().save(book);
+    //     /** Example 1:  new item 
+    //     Book book = new Book();
+    //     repository().save(book);
 
-        */
+    //     */
 
-        /** Example 2:  finding and process
+    //     /** Example 2:  finding and process
         
 
-        repository().findById(publishingRequested.get???()).ifPresent(book->{
+    //     repository().findById(publishingRequested.get???()).ifPresent(book->{
             
-            book // do something
-            repository().save(book);
+    //         book // do something
+    //         repository().save(book);
 
 
-         });
-        */
+    //      });
+    //     */
 
-    }
+    // }
     //>>> Clean Arch / Port Method
 
 }

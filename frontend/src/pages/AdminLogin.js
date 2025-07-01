@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import styles from './AdminLogin.module.css';
+import { authorAPI } from '../services/api';
+import styles from '../styles/AdminLogin.module.css';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -56,35 +57,59 @@ const AdminLogin = () => {
     setIsLoading(true);
 
     try {
-      // 임시 로그인 로직 (데모용)
-      await new Promise(resolve => setTimeout(resolve, 1000)); // 로딩 시뮬레이션
-
-      // 관리자 계정 정보
-      if (formData.email === 'admin@kt.com' && formData.password === 'admin123') {
-        const userData = {
-          id: 999,
-          name: '시스템 관리자',
-          email: 'admin@kt.com',
-          role: 'admin'
-        };
-
-        // 로컬 스토리지에 사용자 정보 저장
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', 'admin_token_' + Date.now());
-
-        // 관리자 대시보드로 리다이렉트
-        navigate('/admin/authors');
-        
-        // 페이지 새로고침으로 네비게이션 업데이트
-        window.location.reload();
-        
-      } else {
-        throw new Error('관리자 계정 정보가 일치하지 않습니다.');
+      // Author API를 통한 로그인 요청
+      const loginResponse = await authorAPI.login({
+        email: formData.email,
+        password: formData.password
+      });
+      
+      console.log('관리자 로그인 성공:', loginResponse);
+      
+      // 관리자 권한 확인
+      if (!loginResponse.isAdmin) {
+        throw new Error('관리자 계정이 아닙니다.');
       }
       
+      // 사용자 데이터 구성
+      const userData = {
+        id: loginResponse.id,
+        name: loginResponse.name,
+        email: loginResponse.email,
+        role: 'admin',
+        introduction: loginResponse.introduction,
+        isApproved: loginResponse.isApproved,
+        isAdmin: loginResponse.isAdmin,
+        createdAt: loginResponse.createdAt,
+        updatedAt: loginResponse.updatedAt
+      };
+
+      // 로컬 스토리지에 사용자 정보 저장
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('token', loginResponse.token);
+
+      // 관리자 대시보드로 리다이렉트
+      navigate('/admin/authors');
+      
+      // 페이지 새로고침으로 네비게이션 업데이트
+      window.location.reload();
+      
     } catch (error) {
+      console.error('관리자 로그인 실패:', error);
+      
+      let errorMessage = '로그인 중 오류가 발생했습니다.';
+      
+      if (error.message.includes('등록되지 않은 이메일')) {
+        errorMessage = '등록되지 않은 이메일입니다.';
+      } else if (error.message.includes('비밀번호가 일치하지 않습니다')) {
+        errorMessage = '비밀번호가 일치하지 않습니다.';
+      } else if (error.message.includes('관리자 계정이 아닙니다')) {
+        errorMessage = '관리자 계정이 아닙니다. 관리자 권한이 있는 계정으로 로그인해주세요.';
+      } else if (error.message.includes('서버에 연결할 수 없습니다')) {
+        errorMessage = 'Author 서비스에 연결할 수 없습니다.\n서버가 실행 중인지 확인해주세요.\n\n🔧 로컬 환경: http://localhost:8083\n🐳 Docker 환경: author 컨테이너 확인';
+      }
+      
       setErrors({
-        submit: error.message || '로그인 중 오류가 발생했습니다.'
+        submit: errorMessage
       });
     } finally {
       setIsLoading(false);

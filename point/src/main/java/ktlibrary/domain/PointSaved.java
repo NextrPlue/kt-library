@@ -7,8 +7,8 @@ import ktlibrary.infra.AbstractEvent;
 import lombok.*;
 
 //<<< DDD / Domain Event
-@Data
-@ToString
+@Getter
+@Setter
 public class PointSaved extends AbstractEvent {
 
     private Long id;
@@ -17,6 +17,9 @@ public class PointSaved extends AbstractEvent {
 
     public PointSaved(Point aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.point = aggregate.getPoint();
+        this.customerId = aggregate.getCustomerId();
     }
 
     public PointSaved() {
