@@ -20,6 +20,12 @@ public class PublishingRequested extends AbstractEvent {
 
     public PublishingRequested(Manuscript aggregate) {
         super(aggregate);
+        this.id = aggregate.getId();
+        this.manuscriptTitle = aggregate.getManuscriptTitle();
+        this.manuscriptContent = aggregate.getManuscriptContent();
+        this.authorId = aggregate.getAuthorId();
+        this.authorName = aggregate.getAuthorName();
+        this.authorIntroduction = aggregate.getAuthorIntroduction();
     }
 
     public PublishingRequested() {
