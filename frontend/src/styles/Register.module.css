@@ -363,6 +363,14 @@ textarea.formInput {
   line-height: 1.5;
 }
 
+.checkboxGroup {
+  margin-top: 0.5rem;
+}
+
+.checkboxGroup .checkboxLabel {
+  margin-bottom: 0;
+}
+
 .termsContent {
   color: #6b7280;
   font-size: 0.8rem;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authorAPI } from '../services/api';
+import { authorAPI, customerAPI } from '../services/api';
 import styles from '../styles/Register.module.css';
 
 const Register = () => {
@@ -13,6 +13,7 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     introduction: '',
+    isKtUser: false,
     agreeTerms: false,
     agreePrivacy: false
   });
@@ -159,18 +160,27 @@ const Register = () => {
         };
         
       } else {
-        // 고객 등록 - 현재는 임시 로직 (추후 Customer 서비스 연동 예정)
-        console.log('고객 등록 (임시 로직)...');
+        // 고객 등록 - Customer 서비스 API 호출
+        console.log('고객 등록 API 호출 시작...');
         
-        // TODO: Customer API 연동
-        await new Promise(resolve => setTimeout(resolve, 1000)); // 임시 로딩
-        
-        userData = {
-          id: Date.now(),
-          name: formData.name,
+        const customerResponse = await customerAPI.registerUser({
           email: formData.email,
+          name: formData.name,
+          password: formData.password,
+          isKtUser: formData.isKtUser
+        });
+
+        console.log('고객 등록 성공:', customerResponse);
+        
+        // Customer 서비스에서 받은 데이터로 사용자 정보 구성
+        userData = {
+          id: customerResponse.id,
+          name: customerResponse.name,
+          email: customerResponse.email,
           role: 'customer',
-          isApproved: true // 고객은 즉시 승인
+          isKtUser: customerResponse.isKtUser,
+          createdAt: customerResponse.createdAt,
+          updatedAt: customerResponse.updatedAt
         };
       }
 
@@ -346,6 +356,30 @@ const Register = () => {
           />
           {errors.confirmPassword && <span className={styles.errorMessage}>{errors.confirmPassword}</span>}
         </div>
+
+        {formData.role === 'customer' && (
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+            <label className={styles.formLabel}>
+              <span className="material-icons">business</span>
+              KT 사용자 여부
+            </label>
+            <div className={styles.checkboxGroup}>
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  name="isKtUser"
+                  checked={formData.isKtUser}
+                  onChange={handleChange}
+                  className={styles.checkboxInput}
+                />
+                <span className={styles.checkboxCustom}></span>
+                <span className={styles.checkboxText}>
+                  KT 사용자입니다 (추가 혜택이 제공됩니다)
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
 
         {formData.role === 'author' && (
           <div className={`${styles.formGroup} ${styles.fullWidth}`}>
