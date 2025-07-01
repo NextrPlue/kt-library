@@ -77,6 +77,8 @@ public class BookAiService {
         book.setSummary(command.getSummary());
         book.setCoverUrl(command.getCoverUrl());
         book.setCategory(command.getCategory());
+        book.setBookUrl(command.getBookUrl());
+        book.setPrice(command.getPrice());
 
         return bookRepository.save(book);
     }
@@ -133,7 +135,9 @@ public class BookAiService {
         } catch (IOException e) {
             throw new RuntimeException("PDF 저장 중 오류가 발생했습니다.", e);
         }
-        System.out.println(bookUrl);
+
+        ebookCommand.setBookUrl(bookUrl);
+        System.out.println("bookUrl: " + ebookCommand.getBookUrl());
 
         // 5. 도서 등록
         RegistBookCommand registCommand = new RegistBookCommand();
@@ -144,14 +148,17 @@ public class BookAiService {
         registCommand.setAuthorName(command.getAuthorName());
         registCommand.setIntroduction(command.getIntroduction());
 
-        registCommand.setSummary(summary);      // 요약
-        registCommand.setCoverUrl(coverUrl);    // 커버 url
-        registCommand.setCategory(category);    // 카테고리
-        registCommand.setBookUrl(bookUrl);      // 전자책 url
+        registCommand.setSummary(command.getSummary());      // 요약
+        registCommand.setCoverUrl(coverCommand.getCoverUrl());    // 커버 url
+        registCommand.setCategory(categoryCommand.getCategory());    // 카테고리
+        registCommand.setBookUrl(ebookCommand.getBookUrl());      // 전자책 url
         registCommand.setPrice(Long.valueOf(1000));
 
         // 도서 등록 후 이벤트 발행 추가
         Book book = registerBook(registCommand);
+
+        System.out.println("url 확인: " + book.getBookUrl());
+        System.out.println("책 가격 확인: " + book.getPrice());
 
         // kafka 이벤트 발행
         BookRegisteredEvent event = new BookRegisteredEvent(
