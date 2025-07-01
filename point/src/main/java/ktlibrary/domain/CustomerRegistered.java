@@ -7,6 +7,8 @@ import lombok.*;
 
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerRegistered extends AbstractEvent {
 
     private Long id;
