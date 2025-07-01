@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
 import AuthorApproval from './pages/AuthorApproval';
+import AuthorProfile from './pages/AuthorProfile';
 import './App.css';
 
 // 테스트용 도서 데이터
@@ -138,12 +139,7 @@ const AuthorPublishing = () => (
   </div>
 );
 
-const AuthorProfile = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>작가 정보</h1>
-    <p>작가 정보를 관리하는 페이지입니다.</p>
-  </div>
-);
+
 
 // 고객 페이지들
 const CustomerBooks = () => (
