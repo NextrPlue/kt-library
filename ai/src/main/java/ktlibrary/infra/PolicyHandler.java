@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.transaction.Transactional;
 import ktlibrary.config.kafka.KafkaProcessor;
 import ktlibrary.domain.PublishingRequested;
-import ktlibrary.application.StartPublishingService;
+import ktlibrary.infra.application.service.StartPublishingService;
 import ktlibrary.domain.Repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
