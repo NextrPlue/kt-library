@@ -32,17 +32,32 @@ public class Customer {
     private Date createdAt;
 
     private Date updatedAt;
+    
     @PrePersist
     protected void onCreate() {
-        this.createdAt = new Date();
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
+
+    @PostPersist
+    protected void afterCreate() {
+        // 새로 등록된 고객인 경우 이벤트 발행
+        if (this.isNewlyRegistered) {
+            CustomerRegistered customerRegistered = new CustomerRegistered(this);
+            customerRegistered.publish();  // 즉시 발행 (이미 저장됨)
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updatedAt = new Date();
+        updatedAt = new Date();
     }
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Subsciption subscription;
+
+    // 새로 등록된 고객인지 확인하는 플래그
+    @Transient
+    private boolean isNewlyRegistered = false;
 
 
     public static CustomerRepository repository() {
@@ -78,9 +93,9 @@ public class Customer {
         this.email = registerUserCommand.getEmail();
         this.password = registerUserCommand.getPassword();
         this.isKtUser = registerUserCommand.getIsKtUser() != null ? registerUserCommand.getIsKtUser() : false;
-        
-        CustomerRegistered customerRegistered = new CustomerRegistered(this);
-        customerRegistered.publishAfterCommit();
+        this.isNewlyRegistered = true;  // 새로 등록됨을 표시
+
+        // 이벤트 발행은 @PostPersist에서 처리
     }
 
     //>>> Clean Arch / Port Method
