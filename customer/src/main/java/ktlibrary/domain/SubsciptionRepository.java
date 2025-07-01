@@ -10,4 +10,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
     path = "subsciptions"
 )
 public interface SubsciptionRepository
-    extends PagingAndSortingRepository<Subsciption, Long> {}
+    extends PagingAndSortingRepository<Subsciption, Long> {
+         Subsciption findByCustomer_IdAndIsValid(Long customerId, Boolean isValid);
+    }
