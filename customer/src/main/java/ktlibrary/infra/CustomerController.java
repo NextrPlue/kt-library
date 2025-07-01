@@ -53,5 +53,43 @@ public class CustomerController {
         customerRepository.save(customer);
         return customer;
     }
+    
+    @RequestMapping(
+        value = "/customers/login",
+        method = RequestMethod.POST,
+        produces = "application/json;charset=UTF-8"
+    )
+    public LoginResponse login(
+        @RequestBody LoginCommand loginCommand,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /customers/login called #####");
+        
+        try {
+            LoginResponse loginResponse = Customer.login(loginCommand, customerRepository);
+            response.setStatus(HttpServletResponse.SC_OK);
+            return loginResponse;
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            throw new Exception(e.getMessage());
+        } catch (IllegalStateException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            throw new Exception(e.getMessage());
+        }
+    }
+    
+    @RequestMapping(
+        value = "/customers",
+        method = RequestMethod.GET,
+        produces = "application/json;charset=UTF-8"
+    )
+    public Iterable<Customer> getAllCustomers(
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /customers getAllCustomers called #####");
+        return customerRepository.findAll();
+    }
 }
 //>>> Clean Arch / Inbound Adaptor
