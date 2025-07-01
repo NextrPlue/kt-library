@@ -191,10 +191,97 @@ export const authorAPI = {
 };
 
 /**
- * Customer API 서비스 (추후 확장용)
+ * Customer API 서비스
  */
 export const customerAPI = {
-  // TODO: Customer API 메소드들 구현
+  /**
+   * 고객 로그인
+   * @param {object} loginData - 로그인 데이터
+   * @param {string} loginData.email - 이메일
+   * @param {string} loginData.password - 비밀번호
+   * @returns {Promise} 로그인 결과
+   */
+  login: async (loginData) => {
+    const url = `${API_CONFIG.gateway}/customers/login`;
+    
+    const payload = {
+      email: loginData.email,
+      password: loginData.password
+    };
+
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * 고객 회원가입
+   * @param {object} customerData - 고객 등록 데이터
+   * @param {string} customerData.email - 이메일
+   * @param {string} customerData.name - 이름
+   * @param {string} customerData.password - 비밀번호
+   * @param {boolean} customerData.isKtUser - KT 사용자 여부
+   * @returns {Promise} 등록된 고객 정보
+   */
+  registerUser: async (customerData) => {
+    const url = `${API_CONFIG.gateway}/customers/registeruser`;
+    
+    const payload = {
+      email: customerData.email,
+      name: customerData.name,
+      password: customerData.password,
+      isKtUser: customerData.isKtUser || false
+    };
+
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  /**
+   * 고객 목록 조회
+   * @returns {Promise} 고객 목록
+   */
+  getCustomers: async () => {
+    const url = `${API_CONFIG.gateway}/customers`;
+    return await apiRequest(url);
+  },
+
+  /**
+   * 특정 고객 조회
+   * @param {number} customerId - 고객 ID
+   * @returns {Promise} 고객 정보
+   */
+  getCustomer: async (customerId) => {
+    const url = `${API_CONFIG.gateway}/customers/${customerId}`;
+    return await apiRequest(url);
+  },
+
+  /**
+   * 이메일로 고객 검색
+   * @param {string} email - 이메일
+   * @returns {Promise} 고객 정보
+   */
+  getCustomerByEmail: async (email) => {
+    const url = `${API_CONFIG.gateway}/customers/search/findByEmail?email=${encodeURIComponent(email)}`;
+    return await apiRequest(url);
+  },
+
+  /**
+   * 도서 요청
+   * @param {object} requestData - 도서 요청 데이터
+   * @returns {Promise} 요청 결과
+   */
+  requestBook: async (requestData) => {
+    const url = `${API_CONFIG.gateway}/customers/requestbook`;
+    
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify(requestData),
+    });
+  }
 };
 
 /**

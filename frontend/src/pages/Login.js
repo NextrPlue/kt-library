@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { authorAPI } from '../services/api';
+import { authorAPI, customerAPI } from '../services/api';
 import styles from '../styles/Login.module.css';
 
 const Login = () => {
@@ -62,34 +62,62 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Author API를 통한 로그인 요청
-      const loginResponse = await authorAPI.login({
-        email: formData.email,
-        password: formData.password
-      });
+      let loginResponse;
+      let userData;
 
-      console.log('로그인 성공:', loginResponse);
+      if (formData.role === 'customer') {
+        // Customer API를 통한 로그인 요청
+        loginResponse = await customerAPI.login({
+          email: formData.email,
+          password: formData.password
+        });
 
-      // 사용자 데이터 구성
-      const userData = {
-        id: loginResponse.id,
-        name: loginResponse.name,
-        email: loginResponse.email,
-        role: loginResponse.isAdmin ? 'admin' : 'author',
-        introduction: loginResponse.introduction,
-        isApproved: loginResponse.isApproved,
-        isAdmin: loginResponse.isAdmin,
-        createdAt: loginResponse.createdAt,
-        updatedAt: loginResponse.updatedAt
-      };
+        console.log('고객 로그인 성공:', loginResponse);
+
+        // 사용자 데이터 구성
+        userData = {
+          id: loginResponse.id,
+          name: loginResponse.name,
+          email: loginResponse.email,
+          role: 'customer',
+          isKtUser: loginResponse.isKtUser,
+          createdAt: loginResponse.createdAt,
+          updatedAt: loginResponse.updatedAt
+        };
+      } else {
+        // Author API를 통한 로그인 요청
+        loginResponse = await authorAPI.login({
+          email: formData.email,
+          password: formData.password
+        });
+
+        console.log('작가/관리자 로그인 성공:', loginResponse);
+
+        // 사용자 데이터 구성
+        userData = {
+          id: loginResponse.id,
+          name: loginResponse.name,
+          email: loginResponse.email,
+          role: loginResponse.isAdmin ? 'admin' : 'author',
+          introduction: loginResponse.introduction,
+          isApproved: loginResponse.isApproved,
+          isAdmin: loginResponse.isAdmin,
+          createdAt: loginResponse.createdAt,
+          updatedAt: loginResponse.updatedAt
+        };
+      }
 
       // 선택한 역할과 실제 권한 확인
       if (formData.role === 'customer' && userData.role !== 'customer') {
-        throw new Error('고객 계정이 아닙니다. 작가 계정으로 로그인해주세요.');
+        throw new Error('고객 계정이 아닙니다.');
       }
       
       if (formData.role === 'author' && userData.role === 'admin') {
         throw new Error('관리자 계정입니다. 관리자 로그인을 이용해주세요.');
+      }
+
+      if (formData.role === 'author' && userData.role === 'customer') {
+        throw new Error('고객 계정입니다. 고객 로그인을 이용해주세요.');
       }
 
       // 로컬 스토리지에 사용자 정보 저장
@@ -98,6 +126,9 @@ const Login = () => {
 
       // 역할에 따른 리다이렉트
       switch (userData.role) {
+        case 'customer':
+          navigate('/customer/books');
+          break;
         case 'author':
           navigate('/author/manuscripts');
           break;
@@ -268,7 +299,7 @@ const Login = () => {
           <p className={styles.demoTitle}>데모 계정:</p>
           <div className={styles.demoAccounts}>
             <div className={styles.demoAccount}>
-              <strong>👤 고객:</strong> 현재 고객 계정 준비 중
+              <strong>👤 고객:</strong> customer@kt.com / password
             </div>
             <div className={styles.demoAccount}>
               <strong>✏️ 작가:</strong> author@kt.com / password
