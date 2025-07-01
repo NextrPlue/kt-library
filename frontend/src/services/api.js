@@ -1,12 +1,6 @@
 // API 기본 설정
 const API_CONFIG = {
-  author: 'https://8083-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  customer: 'https://8084-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  manuscript: 'https://8085-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  point: 'https://8082-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  platform: 'https://8087-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  ai: 'https://8086-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io',
-  gateway: 'https://8088-angrynison-ktlibrary-802yi51qetv.ws-us120.gitpod.io'
+  gateway: 'http://localhost:8088'
 };
 
 /**
