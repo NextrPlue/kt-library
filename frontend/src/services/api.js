@@ -1,6 +1,9 @@
 // API 기본 설정
 const API_CONFIG = {
-  gateway: 'http://localhost:8088'
+  gateway: 'https://8088-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
+  author: 'https://8083-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
+  customer: 'https://8084-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
+  platform: 'https://8087-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
 };
 
 /**
