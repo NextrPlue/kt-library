@@ -1,15 +1,12 @@
 package ktlibrary.infra.messaging.event;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import ktlibrary.domain.Book;
+import ktlibrary.infra.AbstractEvent;
+import lombok.*;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BookRegisteredEvent {
+@ToString
+public class BookRegisteredEvent extends AbstractEvent {
     private Long id;
     private String manuscriptTitle;
     private String manuscriptContent;
@@ -23,4 +20,12 @@ public class BookRegisteredEvent {
     private String bookUrl;
 
     private Long price;
+
+    public BookRegisteredEvent(Book aggregate) {
+        super(aggregate);
+    }
+
+    public BookRegisteredEvent() {
+        super();
+    }
 }
