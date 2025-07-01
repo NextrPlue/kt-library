@@ -8,6 +8,9 @@ import AdminLogin from './pages/AdminLogin';
 import AuthorApproval from './pages/AuthorApproval';
 import AuthorProfile from './pages/AuthorProfile';
 import SubscriptionPage from './pages/SubscriptionPage';
+import AuthorManuscripts from './pages/AuthorManuscripts';
+import AuthorNewManuscript from './pages/AuthorNewManuscript';
+import AuthorPublishing from './pages/AuthorPublishing';
 
 import './App.css';
 
@@ -104,12 +107,12 @@ const HomePage = () => {
 
 
 // 작가 페이지들
-const AuthorManuscripts = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>내 원고</h1>
-    <p>작가의 원고 목록입니다.</p>
-  </div>
-);
+// const AuthorManuscripts = () => (
+//   <div style={{ padding: '2rem' }}>
+//     <h1>내 원고</h1>
+//     <p>작가의 원고 목록입니다.</p>
+//   </div>
+// );
 
 // 관리자 페이지들 - AuthorApproval 컴포넌트를 사용
 
@@ -127,19 +130,12 @@ const AdminCustomers = () => (
   </div>
 );
 
-const AuthorNewManuscript = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>새 원고</h1>
-    <p>새 원고를 작성하는 페이지입니다.</p>
-  </div>
-);
-
-const AuthorPublishing = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>출판 현황</h1>
-    <p>출판 현황을 확인하는 페이지입니다.</p>
-  </div>
-);
+// const AuthorPublishing = () => (
+//   <div style={{ padding: '2rem' }}>
+//     <h1>출판 현황</h1>
+//     <p>출판 현황을 확인하는 페이지입니다.</p>
+//   </div>
+// );
 
 
 
@@ -201,6 +197,7 @@ function App() {
           <Route path="/admin/authors" element={<AuthorApproval />} />
           <Route path="/admin/books" element={<AdminBooks />} />
           <Route path="/admin/customers" element={<AdminCustomers />} />
+
         </Routes>
       </div>
     </Router>
