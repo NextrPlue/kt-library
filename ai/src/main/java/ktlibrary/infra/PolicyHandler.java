@@ -21,19 +21,8 @@ public class PolicyHandler {
     @Autowired
     private StartPublishingService startPublishingService;
 
-    // 이벤트가 발행되었는지 확인
     @StreamListener(KafkaProcessor.INPUT)
-    public void testRawMessage(@Payload String raw) {
-        System.out.println("📦 수신된 RAW 메시지: " + raw);
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            BookRegisteredEvent event = mapper.readValue(raw, BookRegisteredEvent.class);
-            System.out.println("✅ 수동 역직렬화 성공: " + event);
-        } catch (Exception e) {
-            System.out.println("❌ 역직렬화 실패: " + e.getMessage());
-        }
-    }
+    public void whatever(@Payload String eventString) {}
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
