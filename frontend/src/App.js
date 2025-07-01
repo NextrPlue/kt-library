@@ -7,6 +7,8 @@ import Register from './pages/Register';
 import AdminLogin from './pages/AdminLogin';
 import AuthorApproval from './pages/AuthorApproval';
 import AuthorProfile from './pages/AuthorProfile';
+import SubscriptionPage from './pages/SubscriptionPage';
+
 import './App.css';
 
 // 테스트용 도서 데이터
@@ -191,7 +193,7 @@ function App() {
           {/* 고객 라우트 */}
           <Route path="/customer/books" element={<CustomerBooks />} />
           <Route path="/customer/bookshelf" element={<CustomerBookshelf />} />
-          <Route path="/customer/subscription" element={<CustomerSubscription />} />
+          <Route path="/customer/subscription" element={<SubscriptionPage />} />
           <Route path="/customer/points" element={<CustomerPoints />} />
           
           {/* 관리자 라우트 */}
