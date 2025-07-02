@@ -42,4 +42,11 @@ public class PointController {
         pointRepository.save(point);
         return point;
     }
+
+    @GetMapping("/points/{customerId}")
+    public Point getPointByCustomerId(@PathVariable Long customerId) {
+        return pointRepository.findByCustomerId(customerId)
+            .orElseThrow(() -> new IllegalStateException("포인트 정보가 없습니다."));
+    }
+
 }
