@@ -11,6 +11,8 @@ import ktlibrary.ManuscriptApplication;
 import lombok.Data;
 import ktlibrary.infra.ReadAuthorRepository;
 
+
+
 @Entity
 @Table(name = "Manuscript_table")
 @Data
@@ -48,6 +50,13 @@ public class Manuscript {
     protected void onUpdate() {
         this.updatedAt = new Date();
     }
+
+    @PostPersist
+    protected void afterCreate() {
+        // 새 원고 등록 이벤트 발행
+        ManuscriptRegistered manuscriptRegistered = new ManuscriptRegistered(this);
+        manuscriptRegistered.publish();  // 즉시 발행 (commit 기다리지 않음)
+    }
     
     public static ManuscriptRepository repository() {
         ManuscriptRepository manuscriptRepository = ManuscriptApplication.applicationContext.getBean(
@@ -76,6 +85,8 @@ public class Manuscript {
         this.authorId = command.getAuthorId();
         this.manuscriptTitle = command.getManuscriptTitle();
         this.manuscriptContent = command.getManuscriptContent();
+        this.authorName = author.getAuthorName();
+        this.authorIntroduction = author.getIntroduction();
     }
 
     //>>> Clean Arch / Port Method
@@ -93,24 +104,31 @@ public class Manuscript {
         this.authorId = command.getAuthorId();
         this.manuscriptTitle = command.getManuscriptTitle();
         this.manuscriptContent = command.getManuscriptContent();
+        this.authorName = author.getAuthorName();
+        this.authorIntroduction = author.getIntroduction();
+
+        ManuscriptEdited manuscriptEdited = new ManuscriptEdited(this);
+        manuscriptEdited.publishAfterCommit();
     }
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
+    // 출간 요청
     public void requestPublishing(RequestPublishingCommand command) {
-
-        // 등록된 원고가 있는지 확인
-        if (this.manuscriptTitle == null || this.manuscriptTitle.trim().isEmpty()
-            || this.manuscriptContent == null || this.manuscriptContent.trim().isEmpty()) {
+        if (this.manuscriptTitle == null || this.manuscriptTitle.trim().isEmpty() ||
+            this.manuscriptContent == null || this.manuscriptContent.trim().isEmpty()) {
             throw new IllegalStateException("원고가 등록되지 않았습니다. 출간 요청 불가합니다.");
         }
 
-        this.authorName = command.getAuthorName();
-        this.authorIntroduction = command.getAuthorIntroduction();
+        ReadAuthor author = readAuthorRepository().findByAuthorId(this.authorId)
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("작가 정보가 없습니다."));
 
-        Manuscript.repository().save(this);
+        this.authorName = author.getAuthorName();
+        this.authorIntroduction = author.getIntroduction();
 
-        PublishingRequested publishingRequested = new PublishingRequested(this);
-        publishingRequested.publishAfterCommit();
+        PublishingRequested event = new PublishingRequested(this);
+        event.publishAfterCommit();
     }
     //>>> Clean Arch / Port Method
 

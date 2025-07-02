@@ -21,12 +21,12 @@ public class PolicyHandler {
     @Autowired
     private StartPublishingService startPublishingService;
 
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
+    // 이벤트가 발행되었는지 확인
+
 
     @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PublishingRequested'"
+    value = KafkaProcessor.INPUT,
+    condition = "headers['type']=='PublishingRequested'"
     )
     public void wheneverPublishingRequested_PublishingStarted(
         @Payload PublishingRequested publishingRequested

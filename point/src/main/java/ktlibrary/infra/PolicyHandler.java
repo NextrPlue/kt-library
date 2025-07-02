@@ -2,6 +2,7 @@ package ktlibrary.infra;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 import javax.naming.NameParser;
 import javax.transaction.Transactional;
 import ktlibrary.config.kafka.KafkaProcessor;
@@ -25,12 +26,39 @@ public class PolicyHandler {
     private PointApplicationService pointService;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
+    public void whatever(@Payload String eventString) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            Map<String, Object> event = objectMapper.readValue(eventString, Map.class);
+            String eventType = (String) event.get("eventType");
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='InvalidSubscription'"
-    )
+            if (eventType.equals("CustomerRegistered")) {
+                CustomerRegistered customerRegistered = objectMapper.readValue(eventString, CustomerRegistered.class);
+                wheneverCustomerRegistered_AddPoint(customerRegistered);
+            } else if (eventType.equals("InvalidSubscription")) {
+                InvalidSubscription invalidSubscription = objectMapper.readValue(eventString, InvalidSubscription.class);
+                wheneverInvalidSubscription_DeductPoint(invalidSubscription);
+            } else if (eventType.equals("PointSaved")) {
+                PointSaved pointSaved = objectMapper.readValue(eventString, PointSaved.class);
+                wheneverPointSaved_Notify(pointSaved);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void wheneverCustomerRegistered_AddPoint(
+        @Payload CustomerRegistered customerRegistered
+    ) {
+        CustomerRegistered event = customerRegistered;
+        System.out.println(
+            "\n\n##### listener AddPoint : " + customerRegistered + "\n\n"
+        );
+        
+        pointService.processCustomerRegistration(event);
+    }
+
     public void wheneverInvalidSubscription_DeductPoint(
         @Payload InvalidSubscription invalidSubscription
     ) {
@@ -47,21 +75,11 @@ public class PolicyHandler {
             }
         }
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='CustomerRegistered'"
-    )
-    public void wheneverCustomerRegistered_AddPoint(
-        @Payload CustomerRegistered customerRegistered
-    ) {
-        CustomerRegistered event = customerRegistered;
+    public void wheneverPointSaved_Notify(@Payload PointSaved pointSaved) {
+        PointSaved event = pointSaved;
         System.out.println(
-            "\n\n##### listener AddPoint : " + customerRegistered + "\n\n"
+            "\n\n##### listener Notify : " + pointSaved + "\n\n"
         );
-
-        // Sample Logic //
-        // Point.addPoint(event);
-        pointService.processCustomerRegistration(event);
     }
 }
 //>>> Clean Arch / Inbound Adaptor

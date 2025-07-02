@@ -21,7 +21,7 @@ public class PointApplication {
         applicationContext = SpringApplication.run(PointApplication.class, args);
 
         // ✅ 핵심 해결 코드: static 필드에 필요한 빈 수동 등록
-        Point.setEventPublisher(applicationContext.getBean(ApplicationEventPublisher.class));
+        // Point.setEventPublisher(applicationContext.getBean(ApplicationEventPublisher.class));
         AbstractEvent.setKafkaProcessor(applicationContext.getBean(KafkaProcessor.class));
     }
 }

@@ -70,7 +70,8 @@ public class Point {
         point.point = (long) initPoint;
 
         // 도메인 이벤트 등록
-        point.publishAfterCommit(new PointSaved(point));
+        // point.publishAfterCommit(new PointSaved(point));
+
         return point;
     }
 
@@ -81,14 +82,17 @@ public class Point {
     public boolean deduct(Long price) {
         if (price == null || price <= 0 || this.point < price) {
             // 차감 실패 이벤트 등록
-            this.publishAfterCommit(new PointInsufficient(this));
+            // this.publishAfterCommit(new PointInsufficient(this));
+            new PointInsufficient(this).publishAfterCommit();
             return false;
         }
 
         this.point -= price;
         this.updateAt = new Date();
         // 차감 성공 이벤트 등록
-        this.publishAfterCommit(new PointDeducted(this));
+        // this.publishAfterCommit(new PointDeducted(this));
+
+        new PointDeducted(this).publishAfterCommit();
         return true;
     }
 
@@ -105,20 +109,8 @@ public class Point {
         this.updateAt = new Date();
 
         // 적립 이벤트 등록
-        this.publishAfterCommit(new PointSaved(this));
-    }
-
-    @Transient
-    private static ApplicationEventPublisher eventPublisher;
-
-    public static void setEventPublisher(ApplicationEventPublisher publisher) {
-        eventPublisher = publisher;
-    }
-
-    public void publishAfterCommit(Object event) {
-        if (eventPublisher != null) {
-            eventPublisher.publishEvent(event);
-        }
+        // this.publishAfterCommit(new PointSaved(this));
+        new PointSaved(this).publishAfterCommit();
     }
 
 }
