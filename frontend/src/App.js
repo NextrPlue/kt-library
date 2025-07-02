@@ -11,6 +11,7 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import AuthorManuscripts from './pages/AuthorManuscripts';
 import AuthorNewManuscript from './pages/AuthorNewManuscript';
 import AuthorPublishing from './pages/AuthorPublishing';
+import CustomerPoints from './pages/CustomerPoints';
 
 import './App.css';
 
@@ -158,13 +159,6 @@ const CustomerSubscription = () => (
   <div style={{ padding: '2rem' }}>
     <h1>구독 관리</h1>
     <p>구독 관리 페이지입니다.</p>
-  </div>
-);
-
-const CustomerPoints = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>포인트</h1>
-    <p>포인트 관리 페이지입니다.</p>
   </div>
 );
 
