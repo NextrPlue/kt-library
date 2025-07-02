@@ -64,19 +64,25 @@ public class ManuscriptController {
     }
 
     @RequestMapping(
-        value = "/manuscripts/requestpublishing",
+        value = "/manuscripts/{id}/requestpublishing",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
     public Manuscript requestPublishing(
+        @PathVariable("id") Long id,
+        @RequestBody RequestPublishingCommand requestPublishingCommand,
         HttpServletRequest request,
-        HttpServletResponse response,
-        @RequestBody RequestPublishingCommand requestPublishingCommand
+        HttpServletResponse response
     ) throws Exception {
-        System.out.println("##### /manuscript/requestPublishing  called #####");
-        Manuscript manuscript = new Manuscript();
+        System.out.println("##### /manuscript/requestPublishing called #####");
+        
+        Optional<Manuscript> optionalManuscript = manuscriptRepository.findById(id);
+        optionalManuscript.orElseThrow(() -> new Exception("No Manuscript Found"));
+
+        Manuscript manuscript = optionalManuscript.get();
         manuscript.requestPublishing(requestPublishingCommand);
         manuscriptRepository.save(manuscript);
+
         return manuscript;
     }
 }

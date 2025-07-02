@@ -39,11 +39,10 @@ const AuthorManuscripts = () => {
   };
 
   const handlePublish = async (manuscript) => {
-    console.log('📦 출판 요청 직전 데이터:', manuscript);
+    console.log('출판 요청 직전 데이터:', manuscript);
 
     try {
-      await manuscriptAPI.requestPublishing({
-        manuscriptId: manuscript.id,
+      await manuscriptAPI.requestPublishing(manuscript.id, {
         authorName: manuscript.authorName || '알 수 없음',
         authorIntroduction: manuscript.authorIntroduction || '',
       });

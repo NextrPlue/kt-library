@@ -1,19 +1,39 @@
 server:
-  port: 8080
+  port: 8085
 
 spring:
   application:
     name: manuscript
+
 ---
 
 spring:
   profiles: default
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
   cloud:
     stream:
       kafka:
@@ -30,14 +50,10 @@ spring:
       bindings:
         event-in:
           group: manuscript
-#<<< EDA / Topic Name
           destination: ktlibrary
-#>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
           destination: ktlibrary
-#>>> EDA / Topic Name
           contentType: application/json
 
 logging:
@@ -45,20 +61,35 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
-
-server:
-  port: 8085
-
 ---
 
 spring:
   profiles: docker
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
   cloud:
     stream:
       kafka:
@@ -80,5 +111,3 @@ spring:
         event-out:
           destination: ktlibrary
           contentType: application/json
-
-
