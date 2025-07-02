@@ -311,8 +311,8 @@ export const manuscriptAPI = {
   /**
    * 출판 요청 
    */
-  requestPublishing: async (data) => {
-    const url = `${API_CONFIG.gateway}/manuscripts/requestpublishing`; 
+  requestPublishing: async (id, data) => {
+    const url = `${API_CONFIG.gateway}/manuscripts/${id}/requestpublishing`;
     return await apiRequest(url, {
       method: 'POST',
       body: JSON.stringify(data),

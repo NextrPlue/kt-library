@@ -41,7 +41,7 @@ public class StartPublishingService {
 
         bookRepository.save(book);
 
-        // PublishingStarted publishingStarted = new PublishingStarted(book);
-        // publishingStarted.publishAfterCommit();
+        PublishingStarted publishingStarted = new PublishingStarted(book);
+        publishingStarted.publishAfterCommit();
     }
 }
