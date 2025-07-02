@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import BookCard from '../components/BookCard';
+import { platformAPI } from '../services/api';
 import styles from '../styles/CustomerBooks.module.css';
 
 const CustomerBooks = () => {
@@ -9,9 +9,6 @@ const CustomerBooks = () => {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('전체');
 
-  // 백엔드 API URL
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://8087-sorasol9-ktlibrary-00lz4rdx3ja.ws-us120.gitpod.io';
-
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -19,12 +16,15 @@ const CustomerBooks = () => {
   const fetchBooks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE_URL}/bookShelves/all`);
-      setBooks(response.data);
       setError(null);
+      
+      // api.js의 platformAPI 사용
+      const data = await platformAPI.getAllBooks();
+      setBooks(data);
+      
     } catch (err) {
       console.error('도서 목록을 불러오는데 실패했습니다:', err);
-      setError('도서 목록을 불러오는데 실패했습니다.');
+      setError(err.message || '도서 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -33,17 +33,18 @@ const CustomerBooks = () => {
   // 도서 열람 (클릭 시)
   const handleBookClick = async (book) => {
     try {
-      // 열람 API 호출
-      await axios.post(`${API_BASE_URL}/bookShelves/${book.id}/read`);
+      // api.js의 platformAPI 사용
+      await platformAPI.readBook(book.id);
       
       // 열람 후 도서 정보 새로고침
-      fetchBooks();
+      await fetchBooks();
       
       // 여기에 도서 상세 페이지로 이동하거나 모달을 띄우는 로직 추가 가능
       alert(`"${book.title}" 도서를 열람했습니다.`);
+      
     } catch (err) {
       console.error('도서 열람 실패:', err);
-      alert('도서 열람에 실패했습니다.');
+      alert(err.message || '도서 열람에 실패했습니다.');
     }
   };
 

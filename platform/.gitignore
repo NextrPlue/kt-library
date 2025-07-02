@@ -44,5 +44,3 @@ secrets.yml
 node_modules
 .dist/
 .pem
-
-frontend/src/services/api.js
