@@ -10,7 +10,7 @@ openai:
     key: your-openai-api-key
 
 file:
-  base-url: https://8080-kminsu-ktlibrary-xxx.ws-us.gitpod.io
+  base-url: your-gitpod-url
   storage-path: ebooks
 
 ---
