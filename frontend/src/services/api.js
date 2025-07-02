@@ -1,6 +1,6 @@
 // API 기본 설정
 const API_CONFIG = {
-  gateway: 'http://4.248.222.160:8080'
+  gateway: 'http://130.107.27.223'
 };
 
 /**
