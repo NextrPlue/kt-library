@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 //<<< Clean Arch / Inbound Adaptor
 
-@CrossOrigin(origins = "*")
 @RestController
 // @RequestMapping(value="/points")
 @Transactional
