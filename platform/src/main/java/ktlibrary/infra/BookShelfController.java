@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -70,15 +72,43 @@ public class BookShelfController {
     }
 
     @PostMapping("/{bookId}/read")
-    public ResponseEntity<Void> readBook(@PathVariable Long bookId) {
+    public ResponseEntity<Map<String, Object>> readBook(@PathVariable Long bookId) {
+        // 디버깅을 위해 도서 상태 확인
+        BookShelf bookBefore = bookShelfRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        
+        System.out.println("Before - ViewCount: " + bookBefore.getViewCount() + 
+                        ", IsBestSeller: " + bookBefore.getIsBestSeller());
+        
         ReadBookCommand command = ReadBookCommand.builder()
             .bookId(bookId)
-            .customerId(1L) // 테스트용
+            .customerId(1L)
             .accessType(AccessType.SUBSCRIPTION)
             .build();
 
         bookShelfApplicationService.executeBookReading(command);
-        return ResponseEntity.ok().build();
+        
+        // 업데이트 후 상태 확인
+        BookShelf bookAfter = bookShelfRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        
+        System.out.println("After - ViewCount: " + bookAfter.getViewCount() + 
+                        ", IsBestSeller: " + bookAfter.getIsBestSeller());
+        
+        // 응답 데이터 반환
+        Map<String, Object> response = new HashMap<>();
+        response.put("viewCount", bookAfter.getViewCount());
+        response.put("isBestSeller", bookAfter.getIsBestSeller());
+        
+        return ResponseEntity.ok(response);
+    }
+
+    //도서상태 확인
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookShelf> getBook(@PathVariable Long bookId) {
+        BookShelf book = bookShelfRepository.findById(bookId)
+            .orElseThrow(() -> new RuntimeException("Book not found"));
+        return ResponseEntity.ok(book);
     }
 
 }

@@ -12,6 +12,7 @@ import AuthorManuscripts from './pages/AuthorManuscripts';
 import AuthorNewManuscript from './pages/AuthorNewManuscript';
 import AuthorPublishing from './pages/AuthorPublishing';
 import CustomerPoints from './pages/CustomerPoints';
+import CustomerBooks from './pages/CustomerBooks';
 
 import './App.css';
 
@@ -141,12 +142,12 @@ const AdminCustomers = () => (
 
 
 // 고객 페이지들
-const CustomerBooks = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>도서 둘러보기</h1>
-    <p>도서를 둘러보는 페이지입니다.</p>
-  </div>
-);
+// const CustomerBooks = () => (
+//   <div style={{ padding: '2rem' }}>
+//     <h1>도서 둘러보기</h1>
+//     <p>도서를 둘러보는 페이지입니다.</p>
+//   </div>
+// );
 
 const CustomerBookshelf = () => (
   <div style={{ padding: '2rem' }}>

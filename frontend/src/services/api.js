@@ -53,7 +53,6 @@ const apiRequest = async (url, options = {}) => {
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       throw new Error('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
     }
-
     throw error;
   }
 };
@@ -71,7 +70,6 @@ export const authorAPI = {
    */
   login: async (loginData) => {
     const url = `${API_CONFIG.gateway}/authors/login`;
-
     const payload = {
       email: loginData.email,
       password: loginData.password
@@ -94,7 +92,6 @@ export const authorAPI = {
    */
   registerAuthor: async (authorData) => {
     const url = `${API_CONFIG.gateway}/authors/registerauthor`;
-
     const payload = {
       email: authorData.email,
       name: authorData.name,
@@ -144,7 +141,6 @@ export const authorAPI = {
    */
   approveAuthor: async (authorId) => {
     const url = `${API_CONFIG.gateway}/authors/${authorId}/approveauthor`;
-
     return await apiRequest(url, {
       method: 'PUT',
       body: JSON.stringify({ isApproved: true }),
@@ -158,7 +154,6 @@ export const authorAPI = {
    */
   disapproveAuthor: async (authorId) => {
     const url = `${API_CONFIG.gateway}/authors/${authorId}/disapproveauthor`;
-
     return await apiRequest(url, {
       method: 'PUT',
       body: JSON.stringify({ isApproved: false }),
@@ -200,7 +195,6 @@ export const customerAPI = {
    */
   login: async (loginData) => {
     const url = `${API_CONFIG.gateway}/customers/login`;
-
     const payload = {
       email: loginData.email,
       password: loginData.password
@@ -223,7 +217,6 @@ export const customerAPI = {
    */
   registerUser: async (customerData) => {
     const url = `${API_CONFIG.gateway}/customers/registeruser`;
-
     const payload = {
       email: customerData.email,
       name: customerData.name,
@@ -273,7 +266,6 @@ export const customerAPI = {
    */
   requestBook: async (requestData) => {
     const url = `${API_CONFIG.gateway}/customers/requestbook`;
-
     return await apiRequest(url, {
       method: 'POST',
       body: JSON.stringify(requestData),
@@ -319,7 +311,7 @@ export const manuscriptAPI = {
   },
 
   /**
-   * 출판 요청
+   * 출판 요청 
    */
   requestPublishing: async (id, data) => {
     const url = `${API_CONFIG.gateway}/manuscripts/${id}/requestpublishing`;
@@ -385,10 +377,50 @@ export const pointAPI = {
 };
 
 /**
- * Platform API 서비스 (추후 확장용)
+ * Platform API 서비스
  */
 export const platformAPI = {
-  // TODO: Platform API 메소드들 구현
+  /**
+   * 모든 도서 목록 조회
+   * @returns {Promise} 도서 목록
+   */
+  getAllBooks: async () => {
+    const url = `${API_CONFIG.gateway}/bookShelves/all`;
+    return await apiRequest(url);
+  },
+
+  /**
+   * 도서 열람
+   * @param {number} bookId - 도서 ID
+   * @returns {Promise} 열람 결과
+   */
+  readBook: async (bookId) => {
+    const url = `${API_CONFIG.gateway}/bookShelves/${bookId}/read`;
+    return await apiRequest(url, {
+      method: 'POST'
+    });
+  },
+
+  /**
+   * 특정 고객의 도서 목록 조회
+   * @param {number} customerId - 고객 ID
+   * @returns {Promise} 도서 목록
+   */
+  getCustomerBooks: async (customerId) => {
+    const url = `${API_CONFIG.gateway}/bookShelves?customerId=${customerId}`;
+    return await apiRequest(url);
+  },
+
+  /**
+   * 도서 등록 테스트
+   * @returns {Promise} 등록 결과
+   */
+  registerTestBook: async () => {
+    const url = `${API_CONFIG.gateway}/bookShelves/registerTest`;
+    return await apiRequest(url, {
+      method: 'POST'
+    });
+  }
 };
 
 export default {
