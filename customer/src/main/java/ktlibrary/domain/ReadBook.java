@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 //<<< EDA / CQRS
 @Entity
 @Table(name = "ReadBook_table")
 @Data
+@Getter
 public class ReadBook {
 
     @Id

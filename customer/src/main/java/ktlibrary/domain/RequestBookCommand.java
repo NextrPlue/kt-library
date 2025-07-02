@@ -12,4 +12,13 @@ public class RequestBookCommand {
     private Long customerId;
     private Long subsciptionId;
     private Long bookId;
+    public Long getCustomerId(){
+        return customerId;
+    }
+    public Long getBookId(){
+        return bookId;
+    }
+    public Long getSubsciptionId(){
+        return subsciptionId;
+    }
 }
