@@ -4,8 +4,14 @@ server:
 spring:
   application:
     name: ai
-  profiles:
-    active: prod
+
+openai:
+  api:
+    key: your-openai-api-key
+
+file:
+  base-url: your-gitpod-url
+  storage-path: ebooks
 
 ---
 
@@ -83,5 +89,3 @@ spring:
         event-out:
           destination: ktlibrary
           contentType: application/json
-
-

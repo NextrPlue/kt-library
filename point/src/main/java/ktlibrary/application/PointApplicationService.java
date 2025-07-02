@@ -19,8 +19,10 @@ public class PointApplicationService {
 
     // 신규 가입 시
     public void addPoint(CustomerRegistered event) {
+        System.out.println("\n\n##### [CustomerApplicationService] addPoint : " + event + "\n\n");
         Point point = Point.createInitialPoint(event);
         pointRepository.save(point);
+        new PointSaved(point).publishAfterCommit();
     }
 
     // 포인트 차감

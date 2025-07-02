@@ -27,8 +27,6 @@ public class BookAiService {
 
     private final BookRepository bookRepository;
 
-    private final BookEventPublisher bookEventPublisher;
-
     // 1. 원고 요약 생성
     public String generateSummary(GenerateSummaryCommand command) {
         return summaryService.summarize(
@@ -148,33 +146,18 @@ public class BookAiService {
         registCommand.setAuthorName(command.getAuthorName());
         registCommand.setIntroduction(command.getIntroduction());
 
-        registCommand.setSummary(command.getSummary());      // 요약
-        registCommand.setCoverUrl(coverCommand.getCoverUrl());    // 커버 url
-        registCommand.setCategory(categoryCommand.getCategory());    // 카테고리
-        registCommand.setBookUrl(ebookCommand.getBookUrl());      // 전자책 url
-        registCommand.setPrice(Long.valueOf(1000));
+        registCommand.setSummary(command.getSummary());             // 요약
+        registCommand.setCoverUrl(coverCommand.getCoverUrl());      // 커버 url
+        registCommand.setCategory(categoryCommand.getCategory());   // 카테고리
+        registCommand.setBookUrl(ebookCommand.getBookUrl());        // 전자책 url
+        registCommand.setPrice(Long.valueOf(1000));               // 책 가격
 
         // 도서 등록 후 이벤트 발행 추가
         Book book = registerBook(registCommand);
 
-        System.out.println("url 확인: " + book.getBookUrl());
-        System.out.println("책 가격 확인: " + book.getPrice());
-
         // kafka 이벤트 발행
-        BookRegisteredEvent event = new BookRegisteredEvent(
-            book.getId(),
-            book.getManuscriptTitle(),
-            book.getManuscriptContent(),
-            book.getAuthorId(),
-            book.getAuthorName(),
-            book.getIntroduction(),
-            book.getSummary(),
-            book.getCoverUrl(),
-            book.getCategory(),
-            book.getBookUrl(),
-            book.getPrice()
-        );
-        bookEventPublisher.publish(event);
+        BookRegisteredEvent event = new BookRegisteredEvent(book);
+        event.publish();
 
         return book;
     }

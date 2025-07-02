@@ -28,7 +28,7 @@ spring:
         - id: ai
           uri: http://localhost:8086
           predicates:
-            - Path=/books/**, 
+            - Path=/books/**, /test/book
         - id: platform
           uri: http://localhost:8087
           predicates:
