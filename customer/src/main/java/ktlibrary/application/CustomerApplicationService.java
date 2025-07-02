@@ -24,9 +24,9 @@ public class CustomerApplicationService {
         Long bookId = bookRequested.getBookId();
 
         // 유효한 구독인지 확인
-        Subsciption sub = subsciptionRepository.findByCustomer_IdAndIsValid(customerId, true);
+        Subsciption sub = subsciptionRepository.findByCustomer_Id(customerId);
 
-        if (sub != null) {
+        if (sub.getIsValid() ) {
             // ReadModel에서 책 정보 가져오기
             ReadBook bookInfo = readBookRepository.findByBookId(bookId);
 
@@ -43,7 +43,7 @@ public class CustomerApplicationService {
             }
         } else {
             // 유효하지 않은 구독 이벤트 발행
-            InvalidSubscription event = new InvalidSubscription();
+            InvalidSubscription event = new InvalidSubscription(sub);
             event.setCustomerId(customerId);
             event.publishAfterCommit();
             System.out.println("[CustomerApplicationService] 유효하지 않은 구독 : " + event);
