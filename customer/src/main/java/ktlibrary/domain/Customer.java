@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.persistence.*;
 import ktlibrary.CustomerApplication;
 import lombok.Data;
-
+import ktlibrary.infra.*;
 @Entity
 @Table(name = "Customer_table")
 @Data
@@ -131,9 +131,39 @@ public class Customer {
     //<<< Clean Arch / Port Method
     public void requestBook(RequestBookCommand requestBookCommand) {
         //implement business logic here:
+        ReadBook readBook = readBookRepository().findByBookId(requestBookCommand.getBookId());
+        Subsciption subsciption = subsciptionRepository().findByCustomer_Id(requestBookCommand.getCustomerId());
 
-        BookRequested bookRequested = new BookRequested(this);
+        if (readBook == null) {
+            throw new RuntimeException("Book not found with ID: " + requestBookCommand.getBookId());
+        }
+
+        //BookRequested bookRequested = new BookRequested(this);
+        BookRequested bookRequested = new BookRequested();
+        bookRequested.setId(requestBookCommand.getCustomerId());
+        bookRequested.setBookId(requestBookCommand.getBookId());
+        bookRequested.setSubsciptionId(subsciption.getId());
+        bookRequested.setBookshelfId(readBook.getBookShelfId());
+        bookRequested.setTitle(readBook.getTitle());
+        bookRequested.setPrice(readBook.getPrice());
+
+        //bookRequested.setSubsciptionId(requestBookCommand.getSubsciptionId());
+       // bookRequested.setBookId(requestBookCommand.bookId);
         bookRequested.publishAfterCommit();
+    }
+
+
+    public static ReadBookRepository readBookRepository() {
+        ReadBookRepository readBookRepository = CustomerApplication.applicationContext.getBean(
+            ReadBookRepository.class
+        );
+        return readBookRepository;
+    }
+    public static SubsciptionRepository subsciptionRepository(){
+         SubsciptionRepository subsciptionRepository = CustomerApplication.applicationContext.getBean(
+            SubsciptionRepository.class
+        );
+        return subsciptionRepository;   
     }
     //>>> Clean Arch / Port Method
 
