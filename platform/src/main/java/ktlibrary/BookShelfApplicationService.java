@@ -18,10 +18,18 @@ import ktlibrary.domain.BookReadEvent;
 import ktlibrary.domain.BecameBestseller;
 import ktlibrary.domain.AccessType;
 import ktlibrary.domain.BookRead;
+import ktlibrary.domain.BookRegistered; 
+
+import ktlibrary.domain.BookReadModel;
+import ktlibrary.domain.BookReadRepository;
+
 
 @Service
 @Transactional
 public class BookShelfApplicationService {
+
+    @Autowired
+    private BookReadRepository bookReadRepository;
 
     @Autowired
     private BookShelfRepository bookShelfRepository;
@@ -69,6 +77,19 @@ public class BookShelfApplicationService {
 
         // 3. 상태 저장
         bookShelfRepository.save(bookShelf);
+
+        // 4.1 리드모델 저
+        BookReadModel readModel = BookReadModel.builder()
+            .customerId(command.getCustomerId())
+            .bookId(command.getBookId())
+            .title(bookShelf.getTitle())
+            .isBestSeller(bookShelf.getIsBestSeller())
+            .viewCount(bookShelf.getViewCount())
+            .price(bookShelf.getPrice())
+            .accessType(command.getAccessType())
+            .build();
+
+        bookReadRepository.save(readModel);
 
         // 4. 도서 열람 이벤트 발행
         eventPublisher.publish(new BookReadEvent(

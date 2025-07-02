@@ -67,7 +67,6 @@ public class PolicyHandler {
             "\n\n##### listener ReadBook : " + pointDeducted + "\n\n"
         );
 
-       
         bookShelfService.processPointReading(pointDeducted);
     }
 
@@ -85,7 +84,7 @@ public class PolicyHandler {
     public void processBookReading(BookRead event) {
         // 기본적으로 아무 로직이 필요 없다면 로그만 출력해도 됨
         System.out.println("Processing BookRead event: " + event);
-        
+
     }
 }
 //>>> Clean Arch / Inbound Adaptor
