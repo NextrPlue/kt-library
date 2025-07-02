@@ -22,7 +22,7 @@ public class StartPublishingService {
     private BookRepository bookRepository;
 
     @Autowired
-    private BookAiService BookAiService;
+    private BookAiService bookAiService;
 
     public void handlePublishingRequest(PublishingRequested event) {
         StartPublishingCommand command = StartPublishingCommand.builder()
