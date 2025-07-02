@@ -10,19 +10,38 @@ openai:
     key: your-openai-api-key
 
 file:
-  base-url: your-gitpod-url
-  storage-path: ebooks
+  base-url: your-gitpod-url(port 8086)
+  storage-path: /workspace/kt-library/ebooks
 
 ---
 
 spring:
   profiles: default
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show_sql: true
         format_sql: true
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
   cloud:
     stream:
       kafka:
@@ -39,21 +58,16 @@ spring:
       bindings:
         event-in:
           group: ai
-#<<< EDA / Topic Name
           destination: ktlibrary
-#>>> EDA / Topic Name
           contentType: application/json
         event-out:
-#<<< EDA / Topic Name
           destination: ktlibrary
-#>>> EDA / Topic Name
           contentType: application/json
 
 logging:
   level:
     org.hibernate.type: trace
     org.springframework.cloud: debug
-
 
 server:
   port: 8086
