@@ -4,6 +4,7 @@ const API_CONFIG = {
   author: 'https://8083-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
   customer: 'https://8084-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
   platform: 'https://8087-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io',
+  point: 'https://8082-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io'
 };
 
 /**
@@ -331,7 +332,36 @@ export const manuscriptAPI = {
   },
 };
 
+/**
+ * Point API 서비스
+ */
+export const pointAPI = {
+  /**
+   * 포인트 조회
+   * @param {number} customerId
+   * @returns {Promise<number>} 포인트 값
+   */
+  getPoint: async (customerId) => {
+    const url = `${API_CONFIG.point}/points/${customerId}`;
+    const data = await apiRequest(url);
+    return data.point;
+  },
 
+  /**
+   * 포인트 충전 요청
+   * @param {object} payload
+   * @param {number} payload.customerId
+   * @param {number} payload.point
+   * @returns {Promise}
+   */
+  rechargePoint: async ({ customerId, point }) => {
+    const url = `${API_CONFIG.point}/points/requestpoint`;
+    return await apiRequest(url, {
+      method: 'POST',
+      body: JSON.stringify({ customerId, point }),
+    });
+  }
+};
 
 
 
@@ -351,4 +381,5 @@ export default {
   customerAPI,
   platformAPI,
   manuscriptAPI,
+  pointAPI
 };

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { pointAPI } from '../services/api';
 
 const CustomerPoints = () => {
   const [point, setPoint] = useState(null);
@@ -12,14 +13,11 @@ const CustomerPoints = () => {
       if (!userJson) throw new Error('로그인 정보가 없습니다.');
 
       const user = JSON.parse(userJson);
-      const response = await fetch(
-        `https://8082-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io/points/${user.id}`
-      );
-      const data = await response.json();
-      setPoint(data.point);
+      const result = await pointAPI.getPoint(user.id);
+      setPoint(result);
     } catch (error) {
       console.error('포인트 조회 실패:', error.message);
-      setPoint(undefined); // 명시적으로 에러 처리
+      setPoint(undefined);
     } finally {
       setLoading(false);
     }
@@ -38,28 +36,18 @@ const CustomerPoints = () => {
       if (!userJson) throw new Error('로그인 필요');
 
       const user = JSON.parse(userJson);
-      const response = await fetch(
-        `https://8082-baesj1-ktlibrary-w3b1w8wc93i.ws-us120.gitpod.io/points/requestpoint`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ customerId: user.id, point: amount }),
-        }
-      );
+      await pointAPI.rechargePoint({ customerId: user.id, point: amount }); 
 
-      if (response.ok) {
-        alert(`${amount.toLocaleString()}P 적립되었습니다!`);
-        setAmount(0); // 초기화
-        fetchPoint(); // 새로고침
-      } else {
-        alert('적립 실패');
-      }
+      alert(`${amount.toLocaleString()}P 적립되었습니다!`);
+      setAmount(0); // 입력값 초기화
+      fetchPoint(); // 최신 포인트 재조회
     } catch (err) {
       console.error('적립 오류:', err.message);
+      alert('적립 실패: ' + err.message);
     }
   };
 
-  // 빠른 금액 추가
+  // 빠른 금액 추가 버튼 핸들러
   const addAmount = (value) => {
     setAmount((prev) => prev + value);
   };
@@ -89,7 +77,6 @@ const CustomerPoints = () => {
       >
         <h1 style={{ fontSize: '1.75rem', fontWeight: 'bold', color: '#1f2937' }}>포인트</h1>
 
-        {/* 안전한 조건부 렌더링 */}
         {loading ? (
           <p style={{ marginTop: '1rem' }}>불러오는 중...</p>
         ) : typeof point === 'number' ? (
@@ -97,10 +84,12 @@ const CustomerPoints = () => {
             {point.toLocaleString()}P
           </p>
         ) : (
-          <p style={{ marginTop: '1rem', color: '#dc2626' }}>포인트 정보를 불러올 수 없습니다.</p>
+          <p style={{ marginTop: '1rem', color: '#dc2626' }}>
+            포인트 정보를 불러올 수 없습니다.
+          </p>
         )}
 
-        {/* 입력창 */}
+        {/* 입력 및 구매 */}
         <div style={{ marginTop: '2rem' }}>
           <input
             type="number"
