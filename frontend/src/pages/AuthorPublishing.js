@@ -10,16 +10,17 @@ const AuthorPublishing = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const all = await manuscriptAPI.getAllManuscripts();
+        const response = await manuscriptAPI.getAllManuscripts();
+        const all = response._embedded?.manuscripts ?? [];
         const mine = all.filter((m) => m.authorId === user.id);
-        const publishedList = mine.filter((m) => !!m.authorName); // 출판 요청된 것만
+        const publishedList = mine.filter((m) => !!m.authorName);
         setPublished(publishedList);
       } catch (err) {
         console.error('출판현황 조회 실패:', err.message);
       }
     };
     fetch();
-  }, [user]);
+  }, []); //useEffect 1회 실행
 
   return (
     <div className={styles.container}>
