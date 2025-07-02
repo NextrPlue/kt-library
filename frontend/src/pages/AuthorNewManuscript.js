@@ -28,6 +28,8 @@ const AuthorNewManuscript = () => {
     try {
       const manuscriptData = {
         authorId: user.id,
+        authorName: user.name,
+        authorIntroduction: user.introduction,
         manuscriptTitle: title,
         manuscriptContent: content,
       };
