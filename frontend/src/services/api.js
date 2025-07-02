@@ -20,15 +20,22 @@ const apiRequest = async (url, options = {}) => {
 
   try {
     console.log(`API 요청: ${options.method || 'GET'} ${url}`);
+<<<<<<< HEAD
 
     const response = await fetch(url, defaultOptions);
 
+=======
+    
+    const response = await fetch(url, defaultOptions);
+    
+>>>>>>> 38e114a (임시 저장)
     console.log(`API 응답: ${response.status} ${response.statusText}`);
 
     // 응답 처리
     if (!response.ok) {
       const errorText = await response.text();
       console.error('API 오류 응답:', errorText);
+<<<<<<< HEAD
 
       throw new Error(
           response.status === 404
@@ -38,22 +45,45 @@ const apiRequest = async (url, options = {}) => {
                   : response.status === 400
                       ? errorText || '잘못된 요청입니다.'
                       : `HTTP ${response.status}: ${response.statusText}`
+=======
+      
+      throw new Error(
+        response.status === 404 
+          ? '요청한 리소스를 찾을 수 없습니다.'
+          : response.status === 500
+          ? '서버 내부 오류가 발생했습니다.'
+          : response.status === 400
+          ? errorText || '잘못된 요청입니다.'
+          : `HTTP ${response.status}: ${response.statusText}`
+>>>>>>> 38e114a (임시 저장)
       );
     }
 
     // JSON 응답 파싱
     const data = await response.json();
     console.log('API 응답 데이터:', data);
+<<<<<<< HEAD
 
     return data;
   } catch (error) {
     console.error('API 요청 실패:', error);
 
+=======
+    
+    return data;
+  } catch (error) {
+    console.error('API 요청 실패:', error);
+    
+>>>>>>> 38e114a (임시 저장)
     // 네트워크 오류 처리
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
       throw new Error('서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.');
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     throw error;
   }
 };
@@ -71,7 +101,11 @@ export const authorAPI = {
    */
   login: async (loginData) => {
     const url = `${API_CONFIG.gateway}/authors/login`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     const payload = {
       email: loginData.email,
       password: loginData.password
@@ -94,7 +128,11 @@ export const authorAPI = {
    */
   registerAuthor: async (authorData) => {
     const url = `${API_CONFIG.gateway}/authors/registerauthor`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     const payload = {
       email: authorData.email,
       name: authorData.name,
@@ -144,7 +182,11 @@ export const authorAPI = {
    */
   approveAuthor: async (authorId) => {
     const url = `${API_CONFIG.gateway}/authors/${authorId}/approveauthor`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     return await apiRequest(url, {
       method: 'PUT',
       body: JSON.stringify({ isApproved: true }),
@@ -158,7 +200,11 @@ export const authorAPI = {
    */
   disapproveAuthor: async (authorId) => {
     const url = `${API_CONFIG.gateway}/authors/${authorId}/disapproveauthor`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     return await apiRequest(url, {
       method: 'PUT',
       body: JSON.stringify({ isApproved: false }),
@@ -175,11 +221,19 @@ export const authorAPI = {
    */
   editAuthor: async (authorId, updateData) => {
     const url = `${API_CONFIG.gateway}/authors/${authorId}/editauthor`;
+<<<<<<< HEAD
 
     const payload = {};
     if (updateData.email) payload.email = updateData.email;
     if (updateData.introduction !== undefined) payload.introduction = updateData.introduction;
 
+=======
+    
+    const payload = {};
+    if (updateData.email) payload.email = updateData.email;
+    if (updateData.introduction !== undefined) payload.introduction = updateData.introduction;
+    
+>>>>>>> 38e114a (임시 저장)
     return await apiRequest(url, {
       method: 'PUT',
       body: JSON.stringify(payload),
@@ -200,7 +254,11 @@ export const customerAPI = {
    */
   login: async (loginData) => {
     const url = `${API_CONFIG.gateway}/customers/login`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     const payload = {
       email: loginData.email,
       password: loginData.password
@@ -223,7 +281,11 @@ export const customerAPI = {
    */
   registerUser: async (customerData) => {
     const url = `${API_CONFIG.gateway}/customers/registeruser`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     const payload = {
       email: customerData.email,
       name: customerData.name,
@@ -273,11 +335,16 @@ export const customerAPI = {
    */
   requestBook: async (requestData) => {
     const url = `${API_CONFIG.gateway}/customers/requestbook`;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 38e114a (임시 저장)
     return await apiRequest(url, {
       method: 'POST',
       body: JSON.stringify(requestData),
     });
+<<<<<<< HEAD
   },
 
   /**
@@ -288,6 +355,8 @@ export const customerAPI = {
   getCustomerSubscription: async (customerId) => {
     const url = `${API_CONFIG.gateway}/subsciptions/search/findByCustomer_IdAndIsValid?customerId=${customerId}&isValid=true`;
     return await apiRequest(url);
+=======
+>>>>>>> 38e114a (임시 저장)
   }
 };
 
@@ -319,7 +388,7 @@ export const manuscriptAPI = {
   },
 
   /**
-   * 출판 요청
+   * 출판 요청 
    */
   requestPublishing: async (id, data) => {
     const url = `${API_CONFIG.gateway}/manuscripts/${id}/requestpublishing`;
@@ -396,5 +465,9 @@ export default {
   customerAPI,
   platformAPI,
   manuscriptAPI,
+<<<<<<< HEAD
   pointAPI
 };
+=======
+};
+>>>>>>> 38e114a (임시 저장)
