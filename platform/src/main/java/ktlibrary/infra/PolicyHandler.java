@@ -20,23 +20,26 @@ import org.springframework.stereotype.Service;
 public class PolicyHandler {
 
     @Autowired
-    private BookShelfApplicationService bookShelfService;
+    private BookShelfApplicationService bookShelfApplicationService;
 
     public void whatever(@Payload String eventString) {}
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='RegisterationRequested'"
+        condition = "headers['type']=='BookRegisteredEvent'"    // AI 서비스에서 전송한 이벤트 수신
     )
     public void wheneverRegisterationRequested_RegistBook(
         @Payload RegisterationRequested registerationRequested
     ) {
         RegisterationRequested event = registerationRequested;
         System.out.println(
-            "\n\n##### listener RegistBook : " + registerationRequested + "\n\n"
+            "\n\n##### listener RegistBook : " 
+            + registerationRequested 
+            + "AI 서비스 처리됨 수신 완료\n\n"
         );
 
-        bookShelfService.processRegisterBook(event);
+        // 책 등록 시작 (DB 저장)
+        // bookShelfApplicationService.processRegisterBook(event);
     }
 
     @StreamListener(
@@ -52,7 +55,7 @@ public class PolicyHandler {
             "\n\n##### listener ReadBook : " + validSubscription + "\n\n"
         );
 
-        bookShelfService.processSubscriptionReading(validSubscription);
+        bookShelfApplicationService.processSubscriptionReading(validSubscription);
     }
 
     @StreamListener(
@@ -67,7 +70,7 @@ public class PolicyHandler {
             "\n\n##### listener ReadBook : " + pointDeducted + "\n\n"
         );
 
-        bookShelfService.processPointReading(pointDeducted);
+        bookShelfApplicationService.processPointReading(pointDeducted);
     }
 
     @StreamListener(
@@ -78,7 +81,7 @@ public class PolicyHandler {
         BookRead event = bookRead;
         System.out.println("\n\n##### listener IsRead : " + bookRead + "\n\n");
 
-        bookShelfService.processBookReading(bookRead);
+        bookShelfApplicationService.processBookReading(bookRead);
     }
 
     public void processBookReading(BookRead event) {
