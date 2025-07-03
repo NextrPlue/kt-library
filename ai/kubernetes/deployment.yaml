@@ -16,6 +16,13 @@ spec:
     spec:
       containers:
         - name: ai
-          image: "nextrplue/ai:v1"
+          image: "nextrplue/ai:v5"
           ports:
             - containerPort: 8080
+          env:
+            - name: OPENAI_API_KEY
+              value: "YOUR_API_KEY"
+            - name: BASE_URL
+              value: "http://ai:8080"
+            - name: STORAGE_PATH
+              value: "app/ebooks"

@@ -6,6 +6,3 @@ INSERT INTO read_book_table (id,book_id, book_shelf_id, title, price)
 VALUES (1,3, 101, 'Sample Book Title', 15000);
 
 
- INSERT INTO SUBSCIPTION_TABLE (id,is_valid, start_date, end_date, created_at, updated_at, customer_id) 
- VALUES (
-    1,false,'2025-07-01', '2025-08-01', NOW(), NOW(), 1);

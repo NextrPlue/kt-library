@@ -1,3 +1,19 @@
+.bookCard {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 1rem;
+  align-items:stretch;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  /* max-width: 280px; */
+  margin: 0 auto;
+  width: 100%;
+}
+
 .container {
   min-height: calc(100vh - 70px); /* Navigation 높이 제외 */
   background-color: #f9fafb;
@@ -70,9 +86,9 @@
 .booksGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
-  max-width: 1200px;
+  gap: 1rem;
+  padding: 1rem 0;
+  max-width: 1400px;
   margin: 0 auto;
 }
 

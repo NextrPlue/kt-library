@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: point
-          image: "nextrplue/point:v1"
+          image: "nextrplue/point:v3"
           ports:
             - containerPort: 8080

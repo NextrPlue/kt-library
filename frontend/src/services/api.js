@@ -1,6 +1,6 @@
 // API 기본 설정
 const API_CONFIG = {
-  gateway: 'https://8088-sorasol9-ktlibrary-00lz4rdx3ja.ws-us120.gitpod.io'
+  gateway: "http://130.107.27.223"
 };
 
 /**
@@ -420,7 +420,18 @@ export const platformAPI = {
     return await apiRequest(url, {
       method: 'POST'
     });
+  },
+  
+    /**
+   * 도서 ID로 상세 조회
+   * @param {number} bookId - 도서 ID
+   * @returns {Promise} 도서 상세 정보
+   */
+    getBookById: async (bookId) => {
+      const url = `${API_CONFIG.gateway}/bookShelves/${bookId}`;
+      return await apiRequest(url);
   }
+  
 };
 
 export default {

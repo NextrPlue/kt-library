@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ktlibrary.BookShelfApplicationService;  // ✅ ApplicationService 위치 확인
+import ktlibrary.infra.BookShelfApplicationService;  // ✅ ApplicationService 위치 확인
 import ktlibrary.domain.ReadBookCommand;              // ⬅️ 같이 필요
 
 import ktlibrary.domain.BookReadModel;

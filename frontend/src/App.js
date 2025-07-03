@@ -14,6 +14,8 @@ import AuthorPublishing from './pages/AuthorPublishing';
 import CustomerPoints from './pages/CustomerPoints';
 import CustomerBooks from './pages/CustomerBooks';
 import HomePage from './pages/HomePage';
+import CustomerBookshelf from './pages/CustomerBookshelf';
+import BookDetailed from './pages/BookDetailed'; 
 
 import './App.css';
 
@@ -150,12 +152,12 @@ const AdminCustomers = () => (
 //   </div>
 // );
 
-const CustomerBookshelf = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1>내 서재</h1>
-    <p>내 서재 페이지입니다.</p>
-  </div>
-);
+// const CustomerBookshelf = () => (
+//   <div style={{ padding: '2rem' }}>
+//     <h1>내 서재</h1>
+//     <p>내 서재 페이지입니다.</p>
+//   </div>
+// );
 
 const CustomerSubscription = () => (
   <div style={{ padding: '2rem' }}>
@@ -188,7 +190,9 @@ function App() {
           <Route path="/customer/bookshelf" element={<CustomerBookshelf />} />
           <Route path="/customer/subscription" element={<SubscriptionPage />} />
           <Route path="/customer/points" element={<CustomerPoints />} />
-          
+          <Route path="/customer/bookshelf" element={<CustomerBookshelf />} />
+          <Route path="/customer/books/:bookId" element={<BookDetailed />} />
+
           {/* 관리자 라우트 */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/authors" element={<AuthorApproval />} />
