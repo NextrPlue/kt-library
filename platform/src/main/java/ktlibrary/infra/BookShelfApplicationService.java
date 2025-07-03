@@ -37,15 +37,21 @@ public class BookShelfApplicationService {
     @Autowired
     private DomainEventPublisher eventPublisher;
 
-
+    /**
+     * AI 서비스에서 처리된 결과를 수신하여
+     * 도서 등록을 수행하는 메서드
+     * @param event
+     */
     public void processRegisterBook(RegisterationRequested event) {
         BookShelf bookShelf = new BookShelf();
+
         bookShelf.regist(event); // 등록
 
         bookShelfRepository.save(bookShelf); // 저장
 
         eventPublisher.publish(bookShelf.createBookRegisteredEvent()); // 이벤트 발행
     }
+
     // 3. Application Service에서 비즈니스 플로우 조율
     public void processSubscriptionReading(ValidSubscription event) {
         // Command 생성
