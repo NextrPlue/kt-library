@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: manuscript
-          image: "nextrplue/manuscript:v1"
+          image: "nextrplue/manuscript:v3"
           ports:
             - containerPort: 8080

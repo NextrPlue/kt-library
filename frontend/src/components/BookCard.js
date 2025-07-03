@@ -1,7 +1,15 @@
 import React from 'react';
 import styles from '../styles/BookCard.module.css';
 
-const BookCard = ({ book, onClick }) => {
+const BookCard = ({ 
+  book, 
+  onClick, 
+  showAuthor = true, 
+  showSummary = true, 
+  showPrice = true, 
+  showViewCount = true, 
+  showBestsellerBadge = true 
+}) => {
   const {
     id,
     title,
@@ -40,7 +48,7 @@ const BookCard = ({ book, onClick }) => {
         )}
         
         {/* 베스트셀러 뱃지 */}
-        {isBestSeller && (
+        {showBestsellerBadge && isBestSeller && (
           <div className={styles.bestsellerBadge}>
             <span className="material-icons">star</span>
             <span>베스트</span>
@@ -58,12 +66,14 @@ const BookCard = ({ book, onClick }) => {
       {/* 도서 정보 */}
       <div className={styles.bookInfo}>
         <h3 className={styles.bookTitle}>{title}</h3>
-        <p className={styles.bookAuthor}>
-          <span className="material-icons">person</span>
-          {authorName}
-        </p>
+        {showAuthor && (
+          <p className={styles.bookAuthor}>
+            <span className="material-icons">person</span>
+            {authorName}
+          </p>
+        )}
         
-        {summary && (
+        {showSummary && summary && (
           <p className={styles.bookSummary}>
             {summary.length > 80 ? `${summary.substring(0, 80)}...` : summary}
           </p>
@@ -71,15 +81,19 @@ const BookCard = ({ book, onClick }) => {
         
         <div className={styles.bookMeta}>
           <div className={styles.bookStats}>
-            <span className={styles.viewCount}>
-              <span className="material-icons">visibility</span>
-              {formatViewCount(viewCount)}
-            </span>
+            {showViewCount && (
+              <span className={styles.viewCount}>
+                <span className="material-icons">visibility</span>
+                {formatViewCount(viewCount)}
+              </span>
+            )}
           </div>
           
-          <div className={styles.bookPrice}>
-            {formatPrice(price)}
-          </div>
+          {showPrice && (
+            <div className={styles.bookPrice}>
+              {formatPrice(price)}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -28,7 +28,7 @@ const SubscriptionPage = () => {
  const handleSubscribe = async () => {
     try {
       const response = await axios.post(`${API_BASE}/subsciptions/subscribe`, {
-        userId: Number(userId),
+        customerId: Number(user.id),
         plan
       });
        const newId = response.data.id;     // 받은 ID 저장
@@ -36,7 +36,17 @@ const SubscriptionPage = () => {
       setMessage(`구독 성공: ID ${subscriptionId}`);
     } catch (error) {
       console.error(error);
-      setMessage('구독 실패');
+
+      console.error(error);
+
+    // 백엔드에서 예외 메시지가 평문으로 왔을 경우
+    if (error.response && typeof error.response.data === 'string') {
+      setMessage(`구독 실패: ${error.response.data}`);
+    } else {
+      // 기타 예외 처리
+      setMessage('구독 실패: 알 수 없는 오류');
+    }
+      
     }
   };
   // 구독 취소

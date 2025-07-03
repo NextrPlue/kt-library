@@ -1,6 +1,6 @@
 package ktlibrary.infra;
 
-import ktlibrary.BookShelfApplicationService;
+import ktlibrary.infra.BookShelfApplicationService;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

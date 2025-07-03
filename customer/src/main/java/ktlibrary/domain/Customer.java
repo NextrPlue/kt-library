@@ -138,6 +138,14 @@ public class Customer {
             throw new RuntimeException("Book not found with ID: " + requestBookCommand.getBookId());
         }
 
+        if (subsciption == null) {
+            subsciption = new Subsciption();
+            Customer customer = new Customer();
+            customer.setId(requestBookCommand.getCustomerId());
+            subsciption.setCustomer(customer);
+            subsciptionRepository().save(subsciption);
+        }
+
         //BookRequested bookRequested = new BookRequested(this);
         BookRequested bookRequested = new BookRequested();
         bookRequested.setId(requestBookCommand.getCustomerId());

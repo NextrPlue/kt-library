@@ -43,6 +43,14 @@ public class Subsciption {
         return subsciptionRepository;
     }
 
+    public static CustomerRepository customerRepository() {
+        CustomerRepository customerRepository = CustomerApplication.applicationContext.getBean(
+            CustomerRepository.class
+        );
+        return customerRepository;
+    }
+
+
     public void cancelSubscription(CancelSubscriptionCommand command) {
     this.isValid = false;
     this.updatedAt = new Date();
@@ -53,8 +61,9 @@ public class Subsciption {
 
 
     //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
+    //<<< Clean Arch / Port Methodwa
     public void subscribe(SubscribeCommand subscribeCommand) {
+    this.customer =   customerRepository().findById( subscribeCommand.getCustomerId()).get();
     this.isValid = true;
     this.startDate = LocalDate.now().toString();
     this.endDate = LocalDate.now().plusMonths(1).toString();
