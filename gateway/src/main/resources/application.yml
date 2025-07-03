@@ -24,7 +24,7 @@ spring:
         - id: manuscript
           uri: http://localhost:8085
           predicates:
-            - Path=/manuscripts/**, /readAuthors/**
+            - Path=/manuscripts/**, /readAuthors/**,
         - id: ai
           uri: http://localhost:8086
           predicates:
@@ -47,7 +47,7 @@ spring:
               - "*"
             allowedHeaders:
               - "*"
-            allowCredentials: true
+            allowCredentials: false
 
 
 ---
@@ -60,27 +60,27 @@ spring:
         - id: point
           uri: http://point:8080
           predicates:
-            - Path=/points/**, 
+            - Path=/points/**,
         - id: author
           uri: http://author:8080
           predicates:
-            - Path=/authors/**, 
+            - Path=/authors/**,
         - id: customer
           uri: http://customer:8080
           predicates:
-            - Path=/customers/**, /subsciptions/**, 
+            - Path=/customers/**, /subsciptions/**,
         - id: manuscript
           uri: http://manuscript:8080
           predicates:
-            - Path=/manuscripts/**, 
+            - Path=/manuscripts/**, /readAuthors/**,
         - id: ai
           uri: http://ai:8080
           predicates:
-            - Path=/books/**, 
+            - Path=/books/**, / test/book/**, /test-category/**, /test-cover/**, /test-ebook/**. /test/event/**, /test-summary/**,
         - id: platform
           uri: http://platform:8080
           predicates:
-            - Path=/bookShelves/**, 
+            - Path=/bookShelves/**,
         - id: frontend
           uri: http://frontend:8080
           predicates:
@@ -94,7 +94,7 @@ spring:
               - "*"
             allowedHeaders:
               - "*"
-            allowCredentials: true
+            allowCredentials: false
 
 server:
   port: 8080
