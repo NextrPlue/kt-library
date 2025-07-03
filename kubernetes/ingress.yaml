@@ -16,3 +16,10 @@ spec:
             name: gateway
             port:
               number: 8080
+      - path: /app/ebooks
+        pathType: Prefix
+        backend:
+          service:
+            name: ai
+            port:
+              number: 8080
