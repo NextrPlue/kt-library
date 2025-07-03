@@ -22,7 +22,7 @@ public class PolicyHandler {
     @Autowired
     private BookShelfApplicationService bookShelfApplicationService;
 
-    public void whatever(@Payload String eventString) {}
+    //public void whatever(@Payload String eventString) {}
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
@@ -31,15 +31,17 @@ public class PolicyHandler {
     public void wheneverRegisterationRequested_RegistBook(
         @Payload RegisterationRequested registerationRequested
     ) {
-        RegisterationRequested event = registerationRequested;
         System.out.println(
             "\n\n##### listener RegistBook : " 
             + registerationRequested 
-            + "AI 서비스 처리됨 수신 완료\n\n"
+            + " AI 서비스 처리됨 수신 완료\n\n"
         );
 
-        // 책 등록 시작 (DB 저장)
-        // bookShelfApplicationService.processRegisterBook(event);
+        System.out.println(registerationRequested.getManuscriptTitle());
+
+        // 도서 등록 시작 (DB 저장)
+        System.out.println("\n\n도서 등록 시작\n\n");
+        bookShelfApplicationService.processRegisterBook(registerationRequested);
     }
 
     @StreamListener(

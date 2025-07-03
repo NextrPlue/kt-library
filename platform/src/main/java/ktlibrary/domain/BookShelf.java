@@ -33,10 +33,13 @@ public class BookShelf {
 
     private Long viewCount;
 
+    @Column(length = 1000)
     private String summary;
-
+    
+    @Column(length = 1000)
     private String coverUrl;
 
+    @Column(length = 1000)
     private String fileUrl;
 
     private Long authorId;
@@ -64,10 +67,11 @@ public class BookShelf {
         this.introduction = event.getIntroduction();
         this.coverUrl = event.getCoverUrl();
         this.fileUrl = event.getFileUrl();
-        this.price = 1000L;
+        this.price = event.getPrice();
         this.viewCount = 0L;
         this.isBestSeller = false;
     }
+
     public BookRegistered createBookRegisteredEvent() {
         return new BookRegistered(this);  // 생성자에서 BookShelf를 넘기면 내부에서 필요한 필드 꺼내게 설계
     }

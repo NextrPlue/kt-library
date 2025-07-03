@@ -71,7 +71,7 @@ public class Book {
 
     // Aggregate의 publishingStarted 인스턴스 메서드
     public void publishingStarted(StartPublishingCommand command) {
-        System.out.println("Setter 실행됨: " + command.getManuscriptTitle());
+        System.out.println("수신된 원고 제목: " + command.getManuscriptTitle());
         this.manuscriptTitle = command.getManuscriptTitle();
         this.manuscriptContent = command.getManuscriptContent();
         this.authorId = command.getAuthorId();
