@@ -28,7 +28,7 @@ const SubscriptionPage = () => {
  const handleSubscribe = async () => {
     try {
       const response = await axios.post(`${API_BASE}/subsciptions/subscribe`, {
-        userId: Number(userId),
+        customerId: Number(user.id),
         plan
       });
        const newId = response.data.id;     // 받은 ID 저장
