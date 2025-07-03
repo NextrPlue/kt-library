@@ -58,14 +58,14 @@ public class SubsciptionController {
         @RequestBody SubscribeCommand subscribeCommand
     ) throws Exception {
         System.out.println("##### /subsciption/subscribe  called #####");
-        Long  customerId = customerRepository.findById(subscribeCommand.getCustomerId()).get().getId();
-        Optional<Subsciption> optionalSubsciption = subsciptionRepository.findById(customerId);
-        if (optionalSubsciption.isPresent()){
-
-            Subsciption subsciption = optionalSubsciption.get();
-            subsciption.subscribe(subscribeCommand);
-            //subsciptionRepository.save(subsciption);
-            return subsciption;
+        //Long  customerId = customerRepository.findById(subscribeCommand.getCustomerId()).get().getId();
+        Subsciption mySubsciption = subsciptionRepository.findByCustomer_Id(subscribeCommand.getCustomerId());
+        if (mySubsciption != null){
+          
+            //Subsciption subsciption = optionalSubsciption.get();
+            mySubsciption.subscribe(subscribeCommand);
+            subsciptionRepository.save(mySubsciption);
+            return mySubsciption;
         }
       
         Subsciption subsciption = new Subsciption();
