@@ -7,11 +7,11 @@ spring:
 
 openai:
   api:
-    key: your-openai-api-key
+    key: ${OPENAI_API_KEY}
 
 file:
-  base-url: your-gitpod-url(port 8086)
-  storage-path: /workspace/kt-library/ebooks
+  base-url: ${BASE_URL}
+  storage-path: ${STORAGE_PATH}
 
 ---
 
