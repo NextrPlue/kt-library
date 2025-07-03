@@ -61,7 +61,7 @@ public class Subsciption {
 
 
     //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
+    //<<< Clean Arch / Port Methodwa
     public void subscribe(SubscribeCommand subscribeCommand) {
     this.customer =   customerRepository().findById( subscribeCommand.getCustomerId()).get();
     this.isValid = true;
