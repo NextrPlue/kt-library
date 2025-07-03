@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import { platformAPI } from '../services/api';
+import styles from '../styles/CustomerBooks.module.css';
+
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [bestsellerBooks, setBestsellerBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     fetchBestsellerBooks();
   }, []);
@@ -39,10 +41,10 @@ const HomePage = () => {
       // 도서 정보 새로고침
       await fetchBestsellerBooks();
       
-      alert(`"${book.title}" 도서를 열람했습니다.`);
+      
       
       // 도서 상세 페이지로 이동하려면:
-      // navigate(`/book/${book.id}`);
+      navigate(`/customer/books/${book.id}`);
     } catch (err) {
       console.error('도서 열람 실패:', err);
       alert('도서 열람에 실패했습니다.');
@@ -104,7 +106,7 @@ const HomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="books-grid">
+          <div className={styles.booksGrid}>
             {bestsellerBooks.map(book => (
               <BookCard 
                 key={book.id} 
