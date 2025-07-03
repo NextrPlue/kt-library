@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import { platformAPI } from '../services/api';
+import styles from '../styles/CustomerBooks.module.css';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -104,7 +105,7 @@ const HomePage = () => {
             </p>
           </div>
         ) : (
-          <div className="books-grid">
+          <div className={styles.booksGrid}>
             {bestsellerBooks.map(book => (
               <BookCard 
                 key={book.id} 

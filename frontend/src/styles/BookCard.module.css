@@ -7,9 +7,12 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s ease;
+  align-items: stretch;
   cursor: pointer;
   position: relative;
-  max-width: 280px;
+  width: 80%;
+  min-width: 0;
+  /* max-width: 280px; */
   margin: 0 auto;
 }
 
