@@ -7,8 +7,6 @@ import javax.transaction.Transactional;
 import ktlibrary.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -20,6 +18,9 @@ public class SubsciptionController {
     @Autowired
     SubsciptionRepository subsciptionRepository;
 
+
+    @Autowired
+    CustomerRepository customerRepository;
     @RequestMapping(
         value = "/subsciptions/{id}/cancelsubscription",
         method = RequestMethod.DELETE,
@@ -57,6 +58,16 @@ public class SubsciptionController {
         @RequestBody SubscribeCommand subscribeCommand
     ) throws Exception {
         System.out.println("##### /subsciption/subscribe  called #####");
+        Long  customerId = customerRepository.findById(subscribeCommand.getCustomerId()).get().getId();
+        Optional<Subsciption> optionalSubsciption = subsciptionRepository.findById(customerId);
+        if (optionalSubsciption.isPresent()){
+
+            Subsciption subsciption = optionalSubsciption.get();
+            subsciption.subscribe(subscribeCommand);
+            //subsciptionRepository.save(subsciption);
+            return subsciption;
+        }
+      
         Subsciption subsciption = new Subsciption();
         subsciption.subscribe(subscribeCommand);
         subsciptionRepository.save(subsciption);
