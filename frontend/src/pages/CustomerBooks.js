@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import BookCard from '../components/BookCard';
 import { platformAPI } from '../services/api';
 import styles from '../styles/CustomerBooks.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const CustomerBooks = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('전체');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBooks();
@@ -40,12 +42,13 @@ const CustomerBooks = () => {
       await fetchBooks();
       
       // 여기에 도서 상세 페이지로 이동하거나 모달을 띄우는 로직 추가 가능
-      alert(`"${book.title}" 도서를 열람했습니다.`);
-      
+      // alert(`"${book.title}" 도서를 열람했습니다.`);
+      navigate(`/customer/books/${book.id}`);
     } catch (err) {
       console.error('도서 열람 실패:', err);
       alert(err.message || '도서 열람에 실패했습니다.');
     }
+    
   };
 
   // 카테고리별 필터링

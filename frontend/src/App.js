@@ -15,6 +15,7 @@ import CustomerPoints from './pages/CustomerPoints';
 import CustomerBooks from './pages/CustomerBooks';
 import HomePage from './pages/HomePage';
 import CustomerBookshelf from './pages/CustomerBookshelf';
+import BookDetailed from './pages/BookDetailed'; 
 
 import './App.css';
 
@@ -190,7 +191,8 @@ function App() {
           <Route path="/customer/subscription" element={<SubscriptionPage />} />
           <Route path="/customer/points" element={<CustomerPoints />} />
           <Route path="/customer/bookshelf" element={<CustomerBookshelf />} />
-          
+          <Route path="/customer/books/:bookId" element={<BookDetailed />} />
+
           {/* 관리자 라우트 */}
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/authors" element={<AuthorApproval />} />
