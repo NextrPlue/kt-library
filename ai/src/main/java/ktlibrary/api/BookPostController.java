@@ -9,6 +9,8 @@ import ktlibrary.infra.application.service.BookAiService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
+import ktlibrary.domain.Book;
 
 @RestController
 @RequestMapping("/book/ai")
@@ -23,7 +25,7 @@ public class BookPostController {
         // 2. BookAiService의 processBookAiPipeline 메서드를 호출하여 처리합니다.
         // 3. 결과를 ResponseEntity로 반환합니다.
         
-        PublishingRequested result = bookAiService.processBookAiPipeline(command);
+        Book result = bookAiService.processBookAiPipeline(command);
         return ResponseEntity.ok(result);
     }
     
