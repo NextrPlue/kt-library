@@ -1,6 +1,6 @@
 // API 기본 설정
 const API_CONFIG = {
-  gateway: 'https://8088-sorasol9-ktlibrary-00lz4rdx3ja.ws-us120.gitpod.io'
+  gateway: 'http://130.107.27.223'
 };
 
 /**
