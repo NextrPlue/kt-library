@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ktlibrary.domain.Book;
 
 @RestController
-@RequestMapping("/book/ai")
+@RequestMapping("/test/book")
 @RequiredArgsConstructor
 public class BookPostController {
     
