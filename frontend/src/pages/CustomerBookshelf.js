@@ -62,8 +62,8 @@ const CustomerBookshelf = () => {
         await fetchMyBooks(user.id);
       }
       
-      alert(`"${book.title}" 도서를 다시 열람했습니다.`);
       
+      navigate(`/customer/books/${book.id}`);
     } catch (err) {
       console.error('도서 열람 실패:', err);
       alert(err.message || '도서 열람에 실패했습니다.');
