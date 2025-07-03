@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: nextrplue/gateway:v1
+          image: nextrplue/gateway:v2
           ports:
             - containerPort: 8080
