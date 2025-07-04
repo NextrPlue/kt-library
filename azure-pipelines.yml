@@ -233,14 +233,6 @@ stages:
       PLATFORM_BUILD_RESULT: $[stageDependencies.Build.Build_platform.result]
       POINT_BUILD_RESULT: $[stageDependencies.Build.Build_point.result]
       FRONTEND_BUILD_RESULT: $[stageDependencies.Build.Build_frontend.result]
-      aiImageName: 'ai'
-      authorImageName: 'author'
-      customerImageName: 'customer'
-      gatewayImageName: 'gateway'
-      manuscriptImageName: 'manuscript'
-      platformImageName: 'platform'
-      pointImageName: 'point'
-      frontendImageName: 'frontend'
     steps:
     # Each deploy task runs only if its corresponding build job succeeded.
     - task: Kubernetes@1
@@ -254,7 +246,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'ai/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(aiImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=ai,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Author Service'
@@ -267,7 +259,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'author/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(authorImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=author,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Customer Service'
@@ -280,7 +272,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'customer/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(customerImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=customer,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Gateway Service'
@@ -293,7 +285,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'gateway/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(gatewayImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=gateway,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Manuscript Service'
@@ -306,7 +298,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'manuscript/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(manuscriptImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=manuscript,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Platform Service'
@@ -319,7 +311,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'platform/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(platformImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=platform,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Point Service'
@@ -332,7 +324,7 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'point/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(pointImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=point,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - task: Kubernetes@1
       displayName: 'Deploy Frontend Service'
@@ -345,4 +337,4 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'frontend/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_NAME=$(frontendImageName),IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
+        substitutions: 'IMAGE_NAME=frontend,IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
