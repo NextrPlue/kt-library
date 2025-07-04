@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: author
-          image: "nextrplue/author:v1"
+          image: $(ACR_LOGIN_SERVER)/$(IMAGE_NAME):$(IMAGE_TAG)
           ports:
             - containerPort: 8080

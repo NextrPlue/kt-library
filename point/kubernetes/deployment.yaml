@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: point
-          image: "nextrplue/point:v3"
+          image: $(ACR_LOGIN_SERVER)/$(IMAGE_NAME):$(IMAGE_TAG)
           ports:
             - containerPort: 8080
