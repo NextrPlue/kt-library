@@ -236,8 +236,12 @@ stages:
     steps:
     # Each deploy task runs only if its corresponding build job succeeded.
     - bash: |
-        sed -i 's/$(IMAGE_NAME)/ai/g' ai/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for AI Service'
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' ai/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|ai|g' ai/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' ai/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in AI deployment.yaml'
       condition: and(succeeded(), eq(variables.AI_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -251,11 +255,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'ai/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/author/g' author/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Author Service'
+      condition: and(succeeded(), eq(variables.AUTHOR_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' author/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|author|g' author/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' author/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Author deployment.yaml'
       condition: and(succeeded(), eq(variables.AUTHOR_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -269,11 +281,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'author/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/customer/g' customer/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Customer Service'
+      condition: and(succeeded(), eq(variables.CUSTOMER_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' customer/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|customer|g' customer/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' customer/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Customer deployment.yaml'
       condition: and(succeeded(), eq(variables.CUSTOMER_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -287,11 +307,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'customer/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/gateway/g' gateway/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Gateway Service'
+      condition: and(succeeded(), eq(variables.GATEWAY_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' gateway/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|gateway|g' gateway/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' gateway/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Gateway deployment.yaml'
       condition: and(succeeded(), eq(variables.GATEWAY_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -305,11 +333,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'gateway/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/manuscript/g' manuscript/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Manuscript Service'
+      condition: and(succeeded(), eq(variables.MANUSCRIPT_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' manuscript/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|manuscript|g' manuscript/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' manuscript/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Manuscript deployment.yaml'
       condition: and(succeeded(), eq(variables.MANUSCRIPT_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -323,11 +359,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'manuscript/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/platform/g' platform/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Platform Service'
+      condition: and(succeeded(), eq(variables.PLATFORM_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' platform/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|platform|g' platform/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' platform/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Platform deployment.yaml'
       condition: and(succeeded(), eq(variables.PLATFORM_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -341,11 +385,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'platform/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/point/g' point/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Point Service'
+      condition: and(succeeded(), eq(variables.POINT_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' point/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|point|g' point/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' point/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Point deployment.yaml'
       condition: and(succeeded(), eq(variables.POINT_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -359,11 +411,19 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'point/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
 
     - bash: |
         sed -i 's/$(IMAGE_NAME)/frontend/g' frontend/kubernetes/deployment.yaml
       displayName: 'Substitute IMAGE_NAME for Frontend Service'
+      condition: and(succeeded(), eq(variables.FRONTEND_BUILD_RESULT, 'Succeeded'))
+
+    - bash: |
+        ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+        IMAGE_TAG=$(IMAGE_TAG)
+        sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' frontend/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_NAME)|frontend|g' frontend/kubernetes/deployment.yaml
+        sed -i 's|$(IMAGE_TAG)|${IMAGE_TAG}|g' frontend/kubernetes/deployment.yaml
+      displayName: 'Substitute variables in Frontend deployment.yaml'
       condition: and(succeeded(), eq(variables.FRONTEND_BUILD_RESULT, 'Succeeded'))
 
     - task: Kubernetes@1
@@ -377,4 +437,3 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'frontend/kubernetes/deployment.yaml'
-        substitutions: 'IMAGE_TAG=$(IMAGE_TAG),ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)'
