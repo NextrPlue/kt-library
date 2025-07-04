@@ -34,6 +34,7 @@ public class BookShelfReadingTest {
         event.setSummary("요약");
         event.setCoverUrl("cover.png");
         event.setBookUrl("file.pdf");
+        event.setPrice(1000L);
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
@@ -64,6 +65,7 @@ public class BookShelfReadingTest {
         event.setSummary("요약입니다.");
         event.setCoverUrl("cover.png");
         event.setBookUrl("file.pdf");
+        event.setPrice(1000L);
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
