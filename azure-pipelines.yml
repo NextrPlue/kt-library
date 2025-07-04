@@ -241,7 +241,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -254,7 +254,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -267,7 +267,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -280,7 +280,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -293,7 +293,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -306,7 +306,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -319,7 +319,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
@@ -332,7 +332,7 @@ stages:
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
-        resourceGroupName: $(RESOURCE_GROUP)
+        azureResourceGroup: $(RESOURCE_GROUP)
         kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
