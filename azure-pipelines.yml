@@ -1,39 +1,366 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# Azure Pipelines for KT-Library Monorepo
 
 trigger:
-- main
+  branches:
+    include:
+    - main
 
-resources:
-- repo: self
-
+# --- 변수 설정 ---
+# 파이프라인에서 사용할 변수들을 정의합니다.
+# Azure DevOps의 Library에 Variable Group으로 등록하여 사용하는 것을 권장합니다.
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'c07ccba2-847e-4010-99f7-44619a12ad33'
-  imageRepository: 'ai'
-  containerRegistry: 'ai0822.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/ai/Dockerfile'
-  tag: '$(Build.BuildId)'
+  # Azure Service Connection (ARM & ACR)
+  # Azure DevOps 프로젝트 설정에서 생성한 서비스 연결의 이름을 입력하세요.
+  AZURE_SERVICE_CONNECTION: 'AzureResourceManagerConnection'
+  ACR_SERVICE_CONNECTION: 'AzureContainerRegistryConnection'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  # Azure 리소스 정보
+  RESOURCE_GROUP: 'ai0822-rsrcgrp'
+  ACR_NAME: 'ai0822'
+  ACR_LOGIN_SERVER: 'ai0822.azurecr.io'
+  AKS_CLUSTER_NAME: 'ai0822-aks'
 
+  # 이미지 태그 (빌드 ID 사용)
+  IMAGE_TAG: '$(Build.BuildId)'
+
+# --- 파이프라인 단계 ---
 stages:
+# =================================================================================
+# STAGE 1: Build and Push Docker Images
+# 각 서비스의 변경사항을 감지하여 빌드하고 ACR에 이미지를 푸시합니다.
+# =================================================================================
 - stage: Build
-  displayName: Build and push stage
+  displayName: 'Build and Push to ACR'
   jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
+  # --- Java Microservices Build Jobs ---
+  - job: Build_ai
+    displayName: 'Build AI Service'
+    condition: and(succeeded(), changes('ai/**'))
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'ai/pom.xml', goals: 'package -DskipTests' }
     - task: Docker@2
-      displayName: Build and push an image to container registry
+      displayName: 'Build and Push Docker Image'
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'ai'
+        dockerfile: 'ai/Dockerfile'
+        buildContext: 'ai'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_author
+    displayName: 'Build Author Service'
+    condition: and(succeeded(), changes('author/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'author/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'author'
+        dockerfile: 'author/Dockerfile'
+        buildContext: 'author'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_customer
+    displayName: 'Build Customer Service'
+    condition: and(succeeded(), changes('customer/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'customer/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'customer'
+        dockerfile: 'customer/Dockerfile'
+        buildContext: 'customer'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_gateway
+    displayName: 'Build Gateway Service'
+    condition: and(succeeded(), changes('gateway/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'gateway/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'gateway'
+        dockerfile: 'gateway/Dockerfile'
+        buildContext: 'gateway'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_manuscript
+    displayName: 'Build Manuscript Service'
+    condition: and(succeeded(), changes('manuscript/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'manuscript/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'manuscript'
+        dockerfile: 'manuscript/Dockerfile'
+        buildContext: 'manuscript'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_platform
+    displayName: 'Build Platform Service'
+    condition: and(succeeded(), changes('platform/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'platform/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'platform'
+        dockerfile: 'platform/Dockerfile'
+        buildContext: 'platform'
+        tags: $(IMAGE_TAG)
+
+  - job: Build_point
+    displayName: 'Build Point Service'
+    condition: and(succeeded(), changes('point/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: Maven@3
+      displayName: 'Maven Build'
+      inputs: { mavenPomFile: 'point/pom.xml', goals: 'package -DskipTests' }
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'point'
+        dockerfile: 'point/Dockerfile'
+        buildContext: 'point'
+        tags: $(IMAGE_TAG)
+
+  # --- Frontend Build Job ---
+  - job: Build_frontend
+    displayName: 'Build Frontend Service'
+    condition: and(succeeded(), changes('frontend/**'))
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '18.x'
+    - script: |
+        cd frontend
+        npm install
+        npm run build
+      displayName: 'NPM Install and Build'
+    - task: Docker@2
+      displayName: 'Build and Push Docker Image'
+      inputs:
+        command: buildAndPush
+        containerRegistry: $(ACR_SERVICE_CONNECTION)
+        repository: 'frontend'
+        dockerfile: 'frontend/Dockerfile'
+        buildContext: 'frontend'
+        tags: $(IMAGE_TAG)
+
+# =================================================================================
+# STAGE 2: Deploy to Azure Kubernetes Service (AKS)
+# 빌드된 최신 이미지를 AKS 클러스터에 배포합니다.
+# =================================================================================
+- stage: Deploy
+  displayName: 'Deploy to AKS'
+  dependsOn: Build
+  jobs:
+  - job: Deploy_all_services
+    displayName: 'Deploy Services'
+    pool: { vmImage: 'ubuntu-latest' }
+    steps:
+    # --- AI Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy AI Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_ai.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'ai/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        # deployment.yaml의 image 값을 동적으로 교체
+        substitutions: |
+          IMAGE_NAME=ai
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Author Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Author Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_author.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'author/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=author
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Customer Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Customer Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_customer.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'customer/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=customer
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Gateway Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Gateway Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_gateway.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'gateway/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=gateway
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Manuscript Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Manuscript Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_manuscript.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'manuscript/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=manuscript
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Platform Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Platform Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_platform.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'platform/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=platform
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Point Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Point Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_point.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'point/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=point
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
+
+    # --- Frontend Service Deploy Step ---
+    - task: Kubernetes@1
+      displayName: 'Deploy Frontend Service'
+      condition: and(succeeded(), dependencies.Build.outputs['Build_frontend.result'] == 'Succeeded')
+      inputs:
+        connectionType: 'Azure Resource Manager'
+        azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
+        resourceGroupName: $(RESOURCE_GROUP)
+        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        command: apply
+        useConfigurationFile: true
+        configuration: 'frontend/kubernetes/deployment.yaml'
+        secretType: 'dockerRegistry'
+        containerRegistryType: 'Azure Container Registry'
+        azureSubscriptionForACR: $(AZURE_SERVICE_CONNECTION)
+        azureContainerRegistry: $(ACR_LOGIN_SERVER)
+        substitutions: |
+          IMAGE_NAME=frontend
+          IMAGE_TAG=$(IMAGE_TAG)
+          ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
