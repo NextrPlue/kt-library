@@ -34,13 +34,13 @@ public class PolicyHandler {
         System.out.println(
             "\n\n##### listener RegistBook : " 
             + registerationRequested 
-            + " AI 서비스 처리됨 수신 완료\n\n"
+            + " 도서등록요청됨 이벤트 수신 완료\n\n"
         );
 
-        System.out.println(registerationRequested.getManuscriptTitle());
-
         // 도서 등록 시작 (DB 저장)
-        System.out.println("\n\n도서 등록 시작\n\n");
+        System.out.println("\n\n 도서 ID: " + registerationRequested.getId() + 
+                            "\n 도서 제목: " + registerationRequested.getManuscriptTitle() +
+                            "\n도서 등록 시작\n\n");
         bookShelfApplicationService.processRegisterBook(registerationRequested);
     }
 
