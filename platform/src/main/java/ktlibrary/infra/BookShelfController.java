@@ -64,6 +64,7 @@ public class BookShelfController {
         event.setSummary("요약");                   // 도서 요약
         event.setCoverUrl("cover.jpg");             // 도서 표지 URL
         event.setBookUrl("file.pdf");               // 도서 파일 URL
+        event.setPrice(1000L);                      // 도서 가격
 
         bookShelfApplicationService.processRegisterBook(event);
 
