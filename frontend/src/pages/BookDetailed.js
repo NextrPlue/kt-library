@@ -49,7 +49,7 @@ function BookDetailed() {
           <p><strong>저자 소개:</strong> {book.introduction}</p>
           <p><strong>카테고리:</strong> {book.category}</p>
           <p><strong>요약:</strong> {book.summary}</p>
-          <p><strong>가격:</strong> {book.price} 포인트</p>
+          <p><strong>가격:</strong> {book.price}</p>
           <p><strong>조회수:</strong> {book.viewCount}</p>
           <p><strong>베스트셀러:</strong> {book.isBestSeller ? '✅' : '❌'}</p>
         </div>

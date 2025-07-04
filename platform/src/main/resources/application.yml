@@ -1,10 +1,9 @@
 server:
-  port: 8087
+  port: 8080  
 
 spring:
   application:
     name: platform
-
 ---
 
 spring:
@@ -66,6 +65,8 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
+server:
+  port: 8087
 ---
 
 spring:
@@ -121,5 +122,3 @@ spring:
         event-out:
           destination: ktlibrary
           contentType: application/json
-
-

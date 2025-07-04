@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: ai
-          image: "nextrplue/ai:v5"
+          image: $(ACR_LOGIN_SERVER)/$(IMAGE_NAME):$(IMAGE_TAG)
           ports:
             - containerPort: 8080
           env:

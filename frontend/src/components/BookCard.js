@@ -24,6 +24,7 @@ const BookCard = ({
   } = book;
 
   const formatPrice = (price) => {
+    if (typeof price !== 'number') return '가격 정보 없음';
     if (price === 0) return '무료';
     return `${price.toLocaleString()}원`;
   };
