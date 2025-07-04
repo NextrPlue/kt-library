@@ -30,7 +30,8 @@ stages:
   # --- Job to Detect Changes ---
   - job: DetectChanges
     displayName: 'Detect Service Changes'
-    pool: { name: 'my-local-agent-pool' }
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
     - checkout: self
       fetchDepth: 2 # Needed to compare HEAD with HEAD~1
@@ -59,7 +60,7 @@ stages:
     displayName: 'Build AI Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.ai_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -78,7 +79,7 @@ stages:
     displayName: 'Build Author Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.author_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -97,7 +98,7 @@ stages:
     displayName: 'Build Customer Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.customer_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -116,7 +117,7 @@ stages:
     displayName: 'Build Gateway Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.gateway_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -135,7 +136,7 @@ stages:
     displayName: 'Build Manuscript Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.manuscript_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -154,7 +155,7 @@ stages:
     displayName: 'Build Platform Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.platform_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -173,7 +174,7 @@ stages:
     displayName: 'Build Point Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.point_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: Maven@3
       displayName: 'Maven Build'
@@ -192,7 +193,7 @@ stages:
     displayName: 'Build Frontend Service'
     dependsOn: DetectChanges
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.frontend_changed'], 'true'))
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     - task: NodeTool@0
       displayName: 'Install Node.js'
@@ -222,7 +223,7 @@ stages:
   jobs:
   - job: Deploy_all_services
     displayName: 'Deploy Services'
-    pool: { name: 'my-local-agent-pool' }
+    pool: { vmImage: 'ubuntu-latest' }
     steps:
     # Each deploy task runs only if its corresponding build job succeeded.
     - task: Kubernetes@1
