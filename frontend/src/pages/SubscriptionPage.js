@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/SubscriptionPage.module.css';
 import axios from 'axios';
 
-const API_BASE = 'https://8088-changeme4585-ktlibrary-txwfplpe114.ws-us120.gitpod.io';
+const API_BASE = 'http://130.107.27.223';
 const SubscriptionPage = () => {
   const [message, setMessage] = useState('');
   const [user, setUser] = useState(null);
@@ -27,9 +27,13 @@ const SubscriptionPage = () => {
 //구독
  const handleSubscribe = async () => {
     try {
-      const response = await axios.post(`${API_BASE}/subsciptions/subscribe`, {
-        customerId: Number(user.id),
-        plan
+      const response = await axios.post(`${API_BASE}/subsciptions/subscribe`,{
+       headers: {
+             'Content-Type': 'application/json'
+           },
+      data:{
+        customerId: Number(user.id)
+      }
       });
        const newId = response.data.id;     // 받은 ID 저장
       setSubscriptionId(newId);        
