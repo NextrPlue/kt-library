@@ -255,7 +255,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'author/kubernetes/deployment.yaml'
@@ -268,7 +268,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'customer/kubernetes/deployment.yaml'
@@ -281,7 +281,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'gateway/kubernetes/deployment.yaml'
@@ -294,7 +294,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'manuscript/kubernetes/deployment.yaml'
@@ -307,7 +307,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'platform/kubernetes/deployment.yaml'
@@ -320,7 +320,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'point/kubernetes/deployment.yaml'
@@ -333,7 +333,7 @@ stages:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
         resourceGroupName: $(RESOURCE_GROUP)
-        kubernetesClusterName: $(AKS_CLUSTER_NAME)
+        kubernetesCluster: $(AKS_CLUSTER_NAME)
         command: 'apply'
         useConfigurationFile: true
         configuration: 'frontend/kubernetes/deployment.yaml'
