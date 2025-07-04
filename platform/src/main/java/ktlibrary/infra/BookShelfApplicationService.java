@@ -46,22 +46,15 @@ public class BookShelfApplicationService {
      */
     public void processRegisterBook(RegisterationRequested event) {
         BookShelf bookShelf = new BookShelf();
-        bookShelf.setBookId(event.getId());
-        bookShelf.setTitle(event.getManuscriptTitle());
-        bookShelf.setCategory(event.getCategory());
-        bookShelf.setIsBestSeller(false); // 초기값은 false
-        bookShelf.setViewCount(0L); // 초기값은 0
-        bookShelf.setSummary(event.getSummary());
-        bookShelf.setCoverUrl(event.getCoverUrl());
-        bookShelf.setFileUrl(event.getBookUrl());
-        bookShelf.setAuthorId(event.getAuthorId());
-        bookShelf.setPrice(event.getPrice());
-        bookShelf.setAuthorName(event.getAuthorName());
-        bookShelf.setIntroduction(event.getIntroduction());
+
+        bookShelf.regist(event);  // 도메인 메서드 호출로 서재에 도서 등록 정보 설정
 
         // 도메인 상태 변경
         bookShelfRepository.save(bookShelf);    // 저장
-        System.out.println("\n\n도서 등록 완료: " + bookShelf.getTitle() + "\n\n");
+        System.out.println("\n\n**도서 등록 완료**\n" + 
+                            "서재 ID: " + bookShelf.getId() + "\n" +
+                            "도서 ID: " + bookShelf.getBookId() + "\n" +
+                            "도서 제목: " + bookShelf.getTitle() + "\n\n");
 
         // 도서 등록 완료됨 이벤트 발행
         CreateBookEvent createBookEvent = new CreateBookEvent(bookShelf);

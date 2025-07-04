@@ -21,34 +21,34 @@ public class BookShelf {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long id;                // 서재 ID
 
-    private Long bookId;
+    private Boolean isBestSeller;   // 베스트셀러 여부
 
-    private String title;
+    private Long viewCount;         // 조회수
 
-    private String category;
+    private Long authorId;          // 저자 ID
 
-    private Boolean isBestSeller;
+    private String authorName;      // 저자 이름
 
-    private Long viewCount;
+    private String introduction;    // 저자 소개
+
+    private Long bookId;        // 도서 ID
+    
+    private String title;       // 도서 제목
 
     @Column(length = 1000)
-    private String summary;
+    private String summary;     // 도서 요약
     
     @Column(length = 1000)
-    private String coverUrl;
+    private String coverUrl;    // 도서 표지 URL
+
+    private String category;    // 도서 카테고리
 
     @Column(length = 1000)
-    private String fileUrl;
+    private String fileUrl;     // 도서 파일 URL
 
-    private Long authorId;
-
-    private Long price;
-
-    private String authorName;
-
-    private String introduction;
+    private Long price;         // 도서 가격
 
     public static BookShelfRepository repository() {
         BookShelfRepository bookShelfRepository = PlatformApplication.applicationContext.getBean(
@@ -58,15 +58,15 @@ public class BookShelf {
     }
 
     public void regist(RegisterationRequested event) {
-        this.bookId = event.getBookId();
-        this.title = event.getTitle();
+        this.bookId = event.getId();
+        this.title = event.getManuscriptTitle();
         this.category = event.getCategory();
         this.summary = event.getSummary();
         this.authorId = event.getAuthorId();
         this.authorName = event.getAuthorName();
         this.introduction = event.getIntroduction();
         this.coverUrl = event.getCoverUrl();
-        this.fileUrl = event.getFileUrl();
+        this.fileUrl = event.getBookUrl();
         this.price = event.getPrice();
         this.viewCount = 0L;
         this.isBestSeller = false;
