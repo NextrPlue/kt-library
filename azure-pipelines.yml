@@ -224,11 +224,20 @@ stages:
   - job: Deploy_all_services
     displayName: 'Deploy Services'
     pool: { vmImage: 'ubuntu-latest' }
+    variables:
+      AI_BUILD_RESULT: $[stageDependencies.Build.Build_ai.result]
+      AUTHOR_BUILD_RESULT: $[stageDependencies.Build.Build_author.result]
+      CUSTOMER_BUILD_RESULT: $[stageDependencies.Build.Build_customer.result]
+      GATEWAY_BUILD_RESULT: $[stageDependencies.Build.Build_gateway.result]
+      MANUSCRIPT_BUILD_RESULT: $[stageDependencies.Build.Build_manuscript.result]
+      PLATFORM_BUILD_RESULT: $[stageDependencies.Build.Build_platform.result]
+      POINT_BUILD_RESULT: $[stageDependencies.Build.Build_point.result]
+      FRONTEND_BUILD_RESULT: $[stageDependencies.Build.Build_frontend.result]
     steps:
     # Each deploy task runs only if its corresponding build job succeeded.
     - task: Kubernetes@1
       displayName: 'Deploy AI Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_ai.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.AI_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -241,7 +250,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Author Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_author.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.AUTHOR_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -254,7 +263,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Customer Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_customer.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.CUSTOMER_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -267,7 +276,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Gateway Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_gateway.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.GATEWAY_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -280,7 +289,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Manuscript Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_manuscript.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.MANUSCRIPT_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -293,7 +302,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Platform Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_platform.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.PLATFORM_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -306,7 +315,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Point Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_point.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.POINT_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
@@ -319,7 +328,7 @@ stages:
 
     - task: Kubernetes@1
       displayName: 'Deploy Frontend Service'
-      condition: and(succeeded(), eq(stageDependencies.Build.Build_frontend.result, 'Succeeded'))
+      condition: and(succeeded(), eq(variables.FRONTEND_BUILD_RESULT, 'Succeeded'))
       inputs:
         connectionType: 'Azure Resource Manager'
         azureSubscriptionEndpoint: $(AZURE_SERVICE_CONNECTION)
