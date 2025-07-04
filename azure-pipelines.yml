@@ -157,12 +157,6 @@ stages:
     condition: and(succeeded(), eq(dependencies.DetectChanges.outputs['SetChangeVars.platform_changed'], 'true'))
     pool: { vmImage: 'ubuntu-latest' }
     steps:
-    - task: UseJavaVersion@0
-      displayName: 'Use Java 11'
-      inputs:
-        versionSpec: '11'
-        jdkArchitecture: 'x64'
-        jdkSource: 'PreInstalled'
     - task: Maven@3
       displayName: 'Maven Build'
       inputs: { mavenPomFile: 'platform/pom.xml', goals: 'package -DskipTests' }
