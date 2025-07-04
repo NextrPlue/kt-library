@@ -30,8 +30,7 @@ stages:
   # --- Job to Detect Changes ---
   - job: DetectChanges
     displayName: 'Detect Service Changes'
-    pool:
-      vmImage: 'ubuntu-latest'
+    pool: { name: 'my-local-agent-pool' }
     steps:
     - checkout: self
       fetchDepth: 2 # Needed to compare HEAD with HEAD~1
