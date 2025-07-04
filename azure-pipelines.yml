@@ -257,11 +257,6 @@ stages:
         configuration: 'ai/kubernetes/deployment.yaml'
 
     - bash: |
-        sed -i 's/$(IMAGE_NAME)/author/g' author/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Author Service'
-      condition: and(succeeded(), eq(variables.AUTHOR_BUILD_RESULT, 'Succeeded'))
-
-    - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
         IMAGE_TAG=$(IMAGE_TAG)
         sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' author/kubernetes/deployment.yaml
@@ -281,11 +276,6 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'author/kubernetes/deployment.yaml'
-
-    - bash: |
-        sed -i 's/$(IMAGE_NAME)/customer/g' customer/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Customer Service'
-      condition: and(succeeded(), eq(variables.CUSTOMER_BUILD_RESULT, 'Succeeded'))
 
     - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
@@ -309,11 +299,6 @@ stages:
         configuration: 'customer/kubernetes/deployment.yaml'
 
     - bash: |
-        sed -i 's/$(IMAGE_NAME)/gateway/g' gateway/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Gateway Service'
-      condition: and(succeeded(), eq(variables.GATEWAY_BUILD_RESULT, 'Succeeded'))
-
-    - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
         IMAGE_TAG=$(IMAGE_TAG)
         sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' gateway/kubernetes/deployment.yaml
@@ -333,11 +318,6 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'gateway/kubernetes/deployment.yaml'
-
-    - bash: |
-        sed -i 's/$(IMAGE_NAME)/manuscript/g' manuscript/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Manuscript Service'
-      condition: and(succeeded(), eq(variables.MANUSCRIPT_BUILD_RESULT, 'Succeeded'))
 
     - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
@@ -361,11 +341,6 @@ stages:
         configuration: 'manuscript/kubernetes/deployment.yaml'
 
     - bash: |
-        sed -i 's/$(IMAGE_NAME)/platform/g' platform/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Platform Service'
-      condition: and(succeeded(), eq(variables.PLATFORM_BUILD_RESULT, 'Succeeded'))
-
-    - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
         IMAGE_TAG=$(IMAGE_TAG)
         sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' platform/kubernetes/deployment.yaml
@@ -387,11 +362,6 @@ stages:
         configuration: 'platform/kubernetes/deployment.yaml'
 
     - bash: |
-        sed -i 's/$(IMAGE_NAME)/point/g' point/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Point Service'
-      condition: and(succeeded(), eq(variables.POINT_BUILD_RESULT, 'Succeeded'))
-
-    - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
         IMAGE_TAG=$(IMAGE_TAG)
         sed -i 's|$(ACR_LOGIN_SERVER)|${ACR_LOGIN_SERVER}|g' point/kubernetes/deployment.yaml
@@ -411,11 +381,6 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'point/kubernetes/deployment.yaml'
-
-    - bash: |
-        sed -i 's/$(IMAGE_NAME)/frontend/g' frontend/kubernetes/deployment.yaml
-      displayName: 'Substitute IMAGE_NAME for Frontend Service'
-      condition: and(succeeded(), eq(variables.FRONTEND_BUILD_RESULT, 'Succeeded'))
 
     - bash: |
         ACR_LOGIN_SERVER=$(ACR_LOGIN_SERVER)
