@@ -1,67 +1,35 @@
-# manuscript
+# 집필 관리 서비스
 
-## Running in local development environment
+집필 관리 서비스는 KT-Library 시스템에서 원고 및 집필 관련 기능을 담당합니다.
 
-```
+## 로컬 개발 환경에서 실행
+
+**사전 준비 사항:**
+*   Kafka 서버가 실행 중이어야 합니다. (프로젝트 루트의 `infra/docker-compose.yml`을 사용하여 Kafka를 실행할 수 있습니다.)
+
+```bash
 mvn spring-boot:run
 ```
 
-## Packaging and Running in docker environment
+## Docker 환경에서 실행
 
-```
-mvn package -B -DskipTests
-docker build -t username/manuscript:v1 .
-docker run username/manuscript:v1
-```
+프로젝트 루트 디렉토리에서 `docker-compose`를 사용하여 모든 서비스를 함께 실행할 수 있습니다.
 
-## Push images and running in Kubernetes
-
-```
-docker login 
-# in case of docker hub, enter your username and password
-
-docker push username/manuscript:v1
+```bash
+cd .. # 프로젝트 루트 디렉토리로 이동
+docker-compose -f build-docker-compose.yml up --build manuscript
 ```
 
-Edit the deployment.yaml under the /kubernetes directory:
-```
-    spec:
-      containers:
-        - name: manuscript
-          image: username/manuscript:latest   # change this image name
-          ports:
-            - containerPort: 8080
+## Kubernetes 배포
 
-```
+집필 관리 서비스는 Azure Pipelines를 통해 Kubernetes 클러스터에 배포됩니다. 배포 설정은 `kubernetes/deployment.yaml` 파일을 참조하십시오.
 
-Apply the yaml to the Kubernetes:
-```
-kubectl apply -f kubernetes/deployment.yaml
-```
+전체 시스템 배포에 대한 자세한 내용은 [프로젝트 루트 README.md](../README.md) 파일을 참조하십시오.
 
-See the pod status:
+## API 테스트
+
+API 게이트웨이를 통해 집필 관리 서비스의 API를 테스트할 수 있습니다. (API 게이트웨이는 일반적으로 `8088` 포트에서 실행됩니다.)
+
+```bash
+http :8088/manuscripts id="id" manuscriptTitle="manuscriptTitle" manuscriptContent="manuscriptContent" authorId="authorId" authorName="authorName" authorIntroduction="authorIntroduction" createdAt="createdAt" updatedAt="updatedAt"
 ```
-kubectl get pods -l app=manuscript
-```
-
-If you have no problem, you can connect to the service by opening a proxy between your local and the kubernetes by using this command:
-```
-# new terminal
-kubectl port-forward deploy/manuscript 8080:8080
-
-# another terminal
-http localhost:8080
-```
-
-If you have any problem on running the pod, you can find the reason by hitting this:
-```
-kubectl logs -l app=manuscript
-```
-
-Following problems may be occurred:
-
-1. ImgPullBackOff:  Kubernetes failed to pull the image with the image name you've specified at the deployment.yaml. Please check your image name and ensure you have pushed the image properly.
-1. CrashLoopBackOff: The spring application is not running properly. If you didn't provide the kafka installation on the kubernetes, the application may crash. Please install kafka firstly:
-
-https://labs.msaez.io/#/courses/cna-full/full-course-cna/ops-utility
-
