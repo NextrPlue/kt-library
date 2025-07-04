@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { manuscriptAPI } from '../services/api';
+import { authorAPI } from '../services/api';
 
 const AuthorNewManuscript = () => {
   const location = useLocation();
@@ -25,7 +26,14 @@ const AuthorNewManuscript = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    
     try {
+      const author = await authorAPI.getAuthor(user.id);
+      if (!author.isApproved) {
+        alert('승인되지 않은 작가는 원고를 등록할 수 없습니다.');
+        return; // 등록 중단
+      }
+
       const manuscriptData = {
         authorId: user.id,
         authorName: user.name,
