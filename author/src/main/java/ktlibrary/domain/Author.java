@@ -55,7 +55,7 @@ public class Author {
         // 새로 등록된 작가인 경우 이벤트 발행
         if (this.isNewlyRegistered) {
             AuthorRegistered authorRegistered = new AuthorRegistered(this);
-            authorRegistered.publish();  // 즉시 발행 (이미 저장됨)
+            authorRegistered.publish();  // 즉시 발행
         }
     }
 
