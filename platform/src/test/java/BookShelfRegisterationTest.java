@@ -39,6 +39,7 @@ public class BookShelfRegisterationTest {
         event.setSummary("요약 내용");
         event.setCoverUrl("cover.png");
         event.setBookUrl("file.pdf");
+        event.setPrice(1000L);
 
         // when: regist() 호출 후 저장
         BookShelf shelf = new BookShelf();
@@ -68,6 +69,7 @@ public class BookShelfRegisterationTest {
         event.setSummary("요약");
         event.setCoverUrl("cover2.png");
         event.setBookUrl("file2.pdf");
+        event.setPrice(1000L);
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
