@@ -24,15 +24,16 @@ public class BookShelfReadingTest {
     void testBookReadingIncreasesViewCount() {
         // given: 도서 등록
         RegisterationRequested event = new RegisterationRequested();
-        event.setBookId(1L);
-        event.setTitle("열람 테스트 도서");
+        event.setId(1L);
+        event.setManuscriptTitle("열람 테스트 도서");
+        event.setManuscriptContent("열람 테스트 도서 내용");
         event.setCategory("기술");
         event.setAuthorId(321L);
         event.setAuthorName("이몽룡");
         event.setIntroduction("테스트용 도서입니다.");
         event.setSummary("요약");
         event.setCoverUrl("cover.png");
-        event.setFileUrl("file.pdf");
+        event.setBookUrl("file.pdf");
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
@@ -53,15 +54,16 @@ public class BookShelfReadingTest {
     void testBestSellerPromotion() {
         // given
         RegisterationRequested event = new RegisterationRequested();
-        event.setBookId(2L);
-        event.setTitle("베스트셀러 테스트");
+        event.setId(2L);
+        event.setManuscriptTitle("베스트셀러 테스트");
+        event.setManuscriptContent("베스트셀러 도서 내용");
         event.setCategory("문학");
         event.setAuthorId(222L);
         event.setAuthorName("허균");
         event.setIntroduction("열람 횟수 테스트입니다.");
         event.setSummary("요약입니다.");
         event.setCoverUrl("cover.png");
-        event.setFileUrl("file.pdf");
+        event.setBookUrl("file.pdf");
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
