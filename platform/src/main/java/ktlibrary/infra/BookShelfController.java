@@ -52,19 +52,18 @@ public class BookShelfController {
     @PostMapping("/registerTest")
     public ResponseEntity<Void> registerTestBook() {
         RegisterationRequested event = new RegisterationRequested();
-        event.setBookId(100L);  // 이 값은 열람 테스트에서 쓰는 ID와 동일해야 함
-        event.setTitle("테스트 도서");
-        event.setCategory("문학");
-        event.setAuthorId(123L);
-        event.setAuthorName("홍길동");
-        event.setIntroduction("테스트용");
-        event.setSummary("요약");
-        event.setCoverUrl("cover.jpg");
-        event.setFileUrl("file.pdf");
 
-        // BookShelf shelf = new BookShelf();
-        // shelf.regist(event);
-        // bookShelfRepository.save(shelf);
+        // 테스트용 도서 등록 정보 설정 -> 하드코딩
+        event.setId(100L);                          // 도서 ID
+        event.setManuscriptTitle("테스트 도서");    // 도서 제목
+        event.setManuscriptContent("테스트 내용");  // 도서 내용
+        event.setCategory("문학");                  // 카테고리
+        event.setAuthorId(123L);                    // 작가 ID
+        event.setAuthorName("홍길동");              // 작가 이름
+        event.setIntroduction("테스트용");          // 작가 소개
+        event.setSummary("요약");                   // 도서 요약
+        event.setCoverUrl("cover.jpg");             // 도서 표지 URL
+        event.setBookUrl("file.pdf");               // 도서 파일 URL
 
         bookShelfApplicationService.processRegisterBook(event);
 
