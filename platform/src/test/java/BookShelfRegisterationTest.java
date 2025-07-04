@@ -29,15 +29,16 @@ public class BookShelfRegisterationTest {
     void testBookRegisterationViaEvent() {
         // given: 가짜 Kafka 이벤트 객체 생성
         RegisterationRequested event = new RegisterationRequested();
-        event.setBookId(1L);
-        event.setTitle("등록 테스트 도서");
+        event.setId(1L);
+        event.setManuscriptTitle("등록 테스트 도서");
+        event.setManuscriptContent("등록 테스트 도서 내용");
         event.setCategory("기술");
         event.setAuthorId(123L);
         event.setAuthorName("홍길동");
         event.setIntroduction("이 도서는 테스트용입니다.");
         event.setSummary("요약 내용");
         event.setCoverUrl("cover.png");
-        event.setFileUrl("file.pdf");
+        event.setBookUrl("file.pdf");
 
         // when: regist() 호출 후 저장
         BookShelf shelf = new BookShelf();
@@ -48,7 +49,7 @@ public class BookShelfRegisterationTest {
         BookShelf saved = repository.findByBookId(1L)
             .orElseThrow(() -> new RuntimeException("등록 실패"));
 
-        assertEquals("등록 테스트 도서", saved.getTitle());
+        assertEquals("등록 테스트 도서", saved.getManuscriptTitle());
         assertEquals("홍길동", saved.getAuthorName());
         assertEquals(0L, saved.getViewCount());  // 초기값 확인
     }
@@ -57,15 +58,16 @@ public class BookShelfRegisterationTest {
     void testBestsellerPromotion() {
         // given
         RegisterationRequested event = new RegisterationRequested();
-        event.setBookId(2L);
-        event.setTitle("베스트셀러 테스트 도서");
+        event.setId(2L);
+        event.setManuscriptTitle("베스트셀러 테스트 도서");
+        event.setManuscriptContent("베스트셀러 도서 내용");
         event.setCategory("문학");
         event.setAuthorId(456L);
         event.setAuthorName("작가B");
         event.setIntroduction("소개");
         event.setSummary("요약");
         event.setCoverUrl("cover2.png");
-        event.setFileUrl("file2.pdf");
+        event.setBookUrl("file2.pdf");
 
         BookShelf shelf = new BookShelf();
         shelf.regist(event);
